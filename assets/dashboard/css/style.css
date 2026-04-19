@@ -88,7 +88,7 @@
   top: 0;
   position: fixed;
   z-index: 99999;
-  /*background: #18191A;*/
+  /*background: #ffc4dc;*/
 }
 .preloader .cssload-speeding-wheel {
   position: absolute;
@@ -99,7 +99,7 @@
   outline: none;
 }
 body {
-  background: #18191A;
+  background: #ffc4dc;
   font-family: 'Titillium Web';
   margin: 0;
   overflow-x: hidden;
@@ -107,7 +107,7 @@ body {
   color: #fff;
 }
 body .preloader {
-  background: #18191A;
+  background: #ffc4dc;
 }
 html {
   position: relative;
@@ -224,7 +224,7 @@ h6 {
   display: none;
 }
 .page-wrapper {
-  background:#18191A;
+  background:#ffc4dc;
   padding-bottom: 60px;
 }
 .container-fluid {
@@ -1195,7 +1195,7 @@ h6.h1 {
   display: inline-block;
 }
 .header ul.dropdown-user li .dw-user-box .u-text .btn:hover {
-  /*background: #18191A;*/
+  /*background: #ffc4dc;*/
 }
 .header ul.dropdown-user li a {
   padding: 9px 15px;
@@ -1203,7 +1203,7 @@ h6.h1 {
   color: #67757c;
 }
 .header ul.dropdown-user li a:hover {
-  background: #18191A;
+  background: #ffc4dc;
   /*color: #1976d2;*/
   text-decoration: none;
 }
