@@ -28,18 +28,20 @@ if (file_exists(__DIR__ . '/.env')) {
     }
 }
 
-function getEnvValue(array $keys, $default = '')
-{
-    foreach ($keys as $key) {
-        if (isset($_ENV[$key])) {
-            $value = trim((string) $_ENV[$key]);
-            if ($value !== '') {
-                return $value;
+if (!function_exists('getEnvValue')) {
+    function getEnvValue(array $keys, $default = '')
+    {
+        foreach ($keys as $key) {
+            if (isset($_ENV[$key])) {
+                $value = trim((string) $_ENV[$key]);
+                if ($value !== '') {
+                    return $value;
+                }
             }
         }
-    }
 
-    return $default;
+        return $default;
+    }
 }
 
 // Prefer PARSE_* keys but support legacy aliases from .env.example.
@@ -77,9 +79,9 @@ if (session_status() === PHP_SESSION_NONE) {
 try {
     if ($parse_app_id && $parse_rest_key && $parse_master_key) {
         ParseClient::initialize(
-            'NXgg3EtUgqRLryHea3pjIHWf0qNdyWTxbfZAFQ9b',
-            'X4d5nqHZGa06RutBeJ024Tb73JpfJLWKkKUeTQmt',
-            'cx30LCUA8mfrKhS88Zetjo5PU5syyMk2Vh49n54u'
+            $parse_app_id,
+            $parse_rest_key,
+            $parse_master_key
         );
         ParseClient::setServerURL($parse_server_url, $parse_mount_path);
         ParseClient::setStorage(new ParseSessionStorage());
