@@ -60,17 +60,17 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#959595;">ObjectId</th>
-                                    <th style="color:#959595;">Date</th>
-                                    <th style="color:#959595;">Title</th>
-                                    <th style="color:#959595;">Description</th>
-                                    <th style="color:#959595;">Type</th>
-                                    <th style="color:#959595;">Presentation duration</th>
-                                    <th style="color:#959595;">Content</th>
-                                    <th style="color:#959595;">link</th>
-                                    <th style="color:#959595;">Clicks</th>
-                                    <th style="color:#959595;">Status</th>
-                                    <th style="color:#959595;">Action</th>
+                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">Date</th>
+                                    <th style="color:#65131f ;">Title</th>
+                                    <th style="color:#65131f ;">Description</th>
+                                    <th style="color:#65131f ;">Type</th>
+                                    <th style="color:#65131f ;">Presentation duration</th>
+                                    <th style="color:#65131f ;">Content</th>
+                                    <th style="color:#65131f ;">link</th>
+                                    <th style="color:#65131f ;">Clicks</th>
+                                    <th style="color:#65131f ;">Status</th>
+                                    <th style="color:#65131f ;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>

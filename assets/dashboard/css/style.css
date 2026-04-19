@@ -75,7 +75,7 @@
 :root {
   --primary:#ffffff;
   --secondary:#720e8d;
-  --side-menu-bg:#959595;
+  --side-menu-bg:#65131f ;
   --menu-txt-color:#00000;
   --menu-txt-hover-color:#ffffff;
   --li-hover-color:#000000;
@@ -88,7 +88,7 @@
   top: 0;
   position: fixed;
   z-index: 99999;
-  /*background: #ffc4dc;*/
+  /*background: #941B2D;*/
 }
 .preloader .cssload-speeding-wheel {
   position: absolute;
@@ -99,7 +99,7 @@
   outline: none;
 }
 body {
-  background: #ffc4dc;
+  background: #941B2D;
   font-family: 'Titillium Web';
   margin: 0;
   overflow-x: hidden;
@@ -107,12 +107,12 @@ body {
   color: #fff;
 }
 body .preloader {
-  background: #ffc4dc;
+  background: #941B2D;
 }
 html {
   position: relative;
   min-height: 100%;
-  background: #959595;
+  background: #65131f ;
 }
 a:focus,
 a:hover {
@@ -224,7 +224,7 @@ h6 {
   display: none;
 }
 .page-wrapper {
-  background:#ffc4dc;
+  background:#941B2D;
   padding-bottom: 60px;
 }
 .container-fluid {
@@ -1097,7 +1097,7 @@ h6.h1 {
 .header {
   position: relative;
   z-index: 999;
-  background: #959595;
+  background: #65131f ;
   /*box-shadow: 1px 0 1px #cecece;*/
   top:0;
 }
@@ -1195,7 +1195,7 @@ h6.h1 {
   display: inline-block;
 }
 .header ul.dropdown-user li .dw-user-box .u-text .btn:hover {
-  /*background: #ffc4dc;*/
+  /*background: #941B2D;*/
 }
 .header ul.dropdown-user li a {
   padding: 9px 15px;
@@ -1203,7 +1203,7 @@ h6.h1 {
   color: #67757c;
 }
 .header ul.dropdown-user li a:hover {
-  background: #ffc4dc;
+  background: #941B2D;
   /*color: #1976d2;*/
   text-decoration: none;
 }
@@ -1529,7 +1529,7 @@ textarea {
   }
   .header .top-navbar .navbar-nav .dropdown-menu {
     position: absolute;
-    background:#959595;
+    background:#65131f ;
   }
   .mega-dropdown .dropdown-menu {
     height: 480px;
@@ -1977,7 +1977,7 @@ textarea {
   margin-bottom: 0;
 }
 .page-titles {
-  /*background: #959595;*/
+  /*background: #65131f ;*/
   margin: 0 0 30px;
   padding: 15px 10px;
   position: relative;
@@ -2318,7 +2318,7 @@ textarea {
   padding: 0;
 }
 .card {
-  background: #959595 none repeat scroll 0 0;
+  background: #65131f  none repeat scroll 0 0;
   margin: 15px 0;
   padding: 20px;
   border: 0 solid #e7e7e7;
@@ -7096,7 +7096,7 @@ img.modal-content {
 */
 
 #loadingModal .modal-dialog, #loadingModal .modal-body {
-    background:#959595;
+    background:#65131f ;
     color:#fff;
 }
 

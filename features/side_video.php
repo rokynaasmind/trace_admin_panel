@@ -60,17 +60,17 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#959595;">ObjectId</th>
-                                    <th style="color:#959595;">Date</th>
-                                    <th style="color:#959595;">Author</th>
-                                    <th style="color:#959595;">Thumbnail</th>
-                                    <th style="color:#959595;">Video</th>
-                                    <th style="color:#959595;">Views</th>
-                                    <th style="color:#959595;">Status</th>
-                                    <th style="color:#959595;">Comments</th>
-                                    <th style="color:#959595;">Likes</th>
-                                    <th style="color:#959595;">Duration</th>
-                                    <th style="color:#959595;">Action</th>
+                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">Date</th>
+                                    <th style="color:#65131f ;">Author</th>
+                                    <th style="color:#65131f ;">Thumbnail</th>
+                                    <th style="color:#65131f ;">Video</th>
+                                    <th style="color:#65131f ;">Views</th>
+                                    <th style="color:#65131f ;">Status</th>
+                                    <th style="color:#65131f ;">Comments</th>
+                                    <th style="color:#65131f ;">Likes</th>
+                                    <th style="color:#65131f ;">Duration</th>
+                                    <th style="color:#65131f ;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>

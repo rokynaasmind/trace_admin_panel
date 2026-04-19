@@ -50,15 +50,15 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%"> 
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#959595;">ObjectId</th>
-                                    <th style="color:#959595;">Name</th>
-                                    <th style="color:#959595;">Username</th>
-                                    <th style="color:#959595;">Avatar</th>
-                                    <th style="color:#959595;">Gender</th>
-                                    <th style="color:#959595;">Bithday</th>
-                                    <!-- <th style="color:#959595;">Age</th>  -->
-                                    <th style="color:#959595;">Mode</th>
-                                    <!-- <th style="color:#959595;">Activation</th> -->
+                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">Name</th>
+                                    <th style="color:#65131f ;">Username</th>
+                                    <th style="color:#65131f ;">Avatar</th>
+                                    <th style="color:#65131f ;">Gender</th>
+                                    <th style="color:#65131f ;">Bithday</th>
+                                    <!-- <th style="color:#65131f ;">Age</th>  -->
+                                    <th style="color:#65131f ;">Mode</th>
+                                    <!-- <th style="color:#65131f ;">Activation</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>

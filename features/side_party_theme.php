@@ -61,12 +61,12 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#959595;">ObjectId</th>
-                                    <th style="color:#959595;">Date</th>
-                                    <th style="color:#959595;">Name</th>
-                                    <th style="color:#959595;">Category</th>
-                                    <th style="color:#959595;">Credits</th>
-                                    <th style="color:#959595;">File</th>
+                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">Date</th>
+                                    <th style="color:#65131f ;">Name</th>
+                                    <th style="color:#65131f ;">Category</th>
+                                    <th style="color:#65131f ;">Credits</th>
+                                    <th style="color:#65131f ;">File</th>
                                 </tr>
                                 </thead>
                                 <tbody>

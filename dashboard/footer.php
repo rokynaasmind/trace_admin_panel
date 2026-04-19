@@ -7,9 +7,9 @@ echo '
 <!-- loading modal -->
 <div id="loadingModal" class="modal" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width:100px">
-        <div class="modal-content" style="background:#959595;color:#fff;">
-            <div class="modal-body" style="background:#959595;color:#fff;">
-                <div class="text-center" style="background:#959595;color:#fff;">
+        <div class="modal-content" style="background:#65131f ;color:#fff;">
+            <div class="modal-body" style="background:#65131f ;color:#fff;">
+                <div class="text-center" style="background:#65131f ;color:#fff;">
                     <h2><i class="fa fa-spin fa-spinner" style="color:#fff;"></i>
                         <!-- <p id="loadingText"> Loading...</p> -->
                     </h2>

@@ -180,7 +180,7 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #ffc4dc;
+  background: #941B2D;
   /*background: var(--primary);
   background: -webkit-linear-gradient(-135deg, var(--primary), var(--secondary));
   background: -o-linear-gradient(-135deg, var(--primary), var(--secondary));
@@ -190,7 +190,7 @@ iframe {
 
 .wrap-login100 {
   width: 27%;
-  background: #959595;
+  background: #65131f ;
   border-radius: 10px;
   overflow: hidden;
 
