@@ -73,7 +73,8 @@ if ($isAdsActive == true){
 
 }
 
-$_SESSION['account']  = $account;
+// Store ads setting in session
+$_SESSION['account']  = $accountAdsEnable;
 
 ?>
 
