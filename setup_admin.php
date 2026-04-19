@@ -42,9 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message .= '<a href="auth/login.php" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Login Now →</a>';
             
         } catch (ParseException $e) {
-            $error = 'Error: ' . $e->getMessage();
+            $error = 'Parse Error (' . $e->getCode() . '): ' . $e->getMessage();
+            error_log('Admin setup error: ' . $error);
         } catch (Exception $e) {
             $error = 'Error: ' . $e->getMessage();
+            error_log('Admin setup general error: ' . $error);
         }
     }
 }
