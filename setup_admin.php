@@ -32,8 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->setEmail($email);
             $user->set('role', 'admin');
             
+            // Debug: Log what we're trying to do
+            error_log('Attempting to create user: ' . $username);
+            error_log('App ID: ' . (substr($_ENV['PARSE_APP_ID'] ?? '', 0, 10) . '...'));
+            
+            // Attempt signup
             $user->signUp();
             
+            // If we got here, it worked
             $message = '✅ Admin user created successfully!<br>';
             $message .= '<strong>Login Details:</strong><br>';
             $message .= 'Username: ' . htmlspecialchars($username) . '<br>';
@@ -42,8 +48,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message .= '<a href="auth/login.php" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Login Now →</a>';
             
         } catch (ParseException $e) {
-            $error = 'Parse Error (' . $e->getCode() . '): ' . $e->getMessage();
-            error_log('Admin setup error: ' . $error);
+            $code = $e->getCode();
+            $msg = $e->getMessage();
+            
+            $error = 'Parse Error (' . $code . '): ' . $msg;
+            
+            // Add helpful hints based on error code
+            if ($code === 0) {
+                $error .= '<br><br><strong>Possible Causes:</strong><br>';
+                $error .= '• Wrong credentials in .env file<br>';
+                $error .= '• Back4app Master Key is invalid or expired<br>';
+                $error .= '• _User class has permission restrictions<br>';
+                $error .= '<br><a href="direct_api_test.php?test=2" style="color: #0066cc;">Test API directly →</a>';
+            }
+            
+            error_log('Admin setup Parse error: ' . $error);
         } catch (Exception $e) {
             $error = 'Error: ' . $e->getMessage();
             error_log('Admin setup general error: ' . $error);
@@ -211,9 +230,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <?php endif; ?>
         
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; font-size: 13px; color: #666;">
-            <p>✅ Back4app credentials set up correctly?</p>
-            <p>If yes, fill the form above and submit.</p>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+            
+            <?php if ($error && strpos($error, 'Parse Error') !== false): ?>
+            <div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <h3>🔧 Troubleshooting: Parse Error</h3>
+                <p><strong>Your admin setup is failing because of a Parse API issue.</strong></p>
+                <p>Try these steps:</p>
+                <ol style="text-align: left;">
+                    <li><strong>Test your credentials:</strong>
+                        <ul>
+                            <li><a href="direct_api_test.php?test=3" style="color: #0066cc;">Test Server Health</a></li>
+                            <li><a href="direct_api_test.php?test=2" style="color: #0066cc;">Test User Creation</a></li>
+                        </ul>
+                    </li>
+                    <li><strong>Verify .env credentials:</strong>
+                        <ul>
+                            <li>Go to Back4app Dashboard</li>
+                            <li>Click your application</li>
+                            <li>Settings → Keys</li>
+                            <li>Copy credentials and update .env file</li>
+                        </ul>
+                    </li>
+                    <li><strong>Check _User class permissions:</strong>
+                        <ul>
+                            <li>Back4app Dashboard → Browser → _User</li>
+                            <li>Click the class name → Settings</li>
+                            <li>Ensure Master Key has write permissions</li>
+                        </ul>
+                    </li>
+                    <li><strong>Debug page:</strong>
+                        <ul>
+                            <li><a href="debug_credentials.php" style="color: #0066cc;">Open Debug Credentials Page</a></li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <?php endif; ?>
+            
+            <div style="text-align: center; font-size: 13px; color: #666;">
+                <p>✅ Back4app credentials set up correctly?</p>
+                <p>If yes, fill the form above and submit.</p>
+                <p><small>Having issues? <a href="direct_api_test.php" style="color: #0066cc;">Test your credentials here →</a></small></p>
+            </div>
         </div>
     </div>
 </body>
