@@ -60,13 +60,13 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">ObjectId</th>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">Reporter</th>
-                                    <th style="color:#242526;">Reported</th>
-                                    <th style="color:#242526;">Reason</th>
-                                    <th style="color:#242526;">Live Stream</th>
-                                    <th style="color:#242526;">Video</th>
+                                    <th style="color:#959595;">ObjectId</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">Reporter</th>
+                                    <th style="color:#959595;">Reported</th>
+                                    <th style="color:#959595;">Reason</th>
+                                    <th style="color:#959595;">Live Stream</th>
+                                    <th style="color:#959595;">Video</th>
                                 </tr>
                                 </thead>
                                 <tbody>

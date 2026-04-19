@@ -60,12 +60,12 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">URL</th>
-                                    <th style="color:#242526;">Title</th>
-                                    <th style="color:#242526;">Sub-title</th>
-                                    <th style="color:#242526;">Preview Image</th>
-                                    <th style="color:#242526;">Views</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">URL</th>
+                                    <th style="color:#959595;">Title</th>
+                                    <th style="color:#959595;">Sub-title</th>
+                                    <th style="color:#959595;">Preview Image</th>
+                                    <th style="color:#959595;">Views</th>
                                 </tr>
                                 </thead>
                                 <tbody>

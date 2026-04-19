@@ -99,7 +99,7 @@ echo '
                 <a class="nav-link dropdown-toggle text-white" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span><i class="fa fa-bell h1"></i>'.$badge.'</span></a> 
                 
-                    <div class="dropdown-menu dropdown-menu-right p-t-0" style="background:#242526;color:#fff;box-shadow:0px 0px 1px #cecece">
+                    <div class="dropdown-menu dropdown-menu-right p-t-0" style="background:#959595;color:#fff;box-shadow:0px 0px 1px #cecece">
                         <ul class="dropdown-user">
                         
                             '.$content.'
@@ -114,7 +114,7 @@ echo '
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="' .$avatarURL.'" alt="user" class="profile-pic" /></a> 
                 
-                    <div class="dropdown-menu dropdown-menu-right  p-t-0" style="background:#242526;color:#fff;box-shadow:0px 0px 1px #cecece">
+                    <div class="dropdown-menu dropdown-menu-right  p-t-0" style="background:#959595;color:#fff;box-shadow:0px 0px 1px #cecece">
                         <ul class="dropdown-user">
                         
                             <!-- <li><a href="#" style="color:#fff;" onclick="logOut()"><i class="fa fa-sign-out"></i> Exit</a></li> -->

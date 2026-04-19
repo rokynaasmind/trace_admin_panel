@@ -62,14 +62,14 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">ObjectId</th>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">From</th>
-                                    <th style="color:#242526;">To</th>
-                                    <th style="color:#242526;">Call</th>
-                                    <th style="color:#242526;">Accepted</th>
-                                    <th style="color:#242526;">End Reason</th>
-                                    <th style="color:#242526;">Duration</th>
+                                    <th style="color:#959595;">ObjectId</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">From</th>
+                                    <th style="color:#959595;">To</th>
+                                    <th style="color:#959595;">Call</th>
+                                    <th style="color:#959595;">Accepted</th>
+                                    <th style="color:#959595;">End Reason</th>
+                                    <th style="color:#959595;">Duration</th>
                                 </tr>
                                 </thead>
                                 <tbody>

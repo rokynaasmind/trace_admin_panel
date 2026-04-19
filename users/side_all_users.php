@@ -70,15 +70,15 @@ function array_get_by_index($index, $array) {
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">ObjectId</th>
-                                    <th style="color:#242526;">Name</th>
-                                    <th style="color:#242526;">Username</th>
-                                    <th style="color:#242526;">Avatar</th>
-                                    <th style="color:#242526;">Verified</th>
-                                    <th style="color:#242526;">Gender</th>
-                                    <th style="color:#242526;">Bithday</th>
-                                    <th style="color:#242526;">Mode</th>
-                                    <th style="color:#242526;">Action</th>
+                                    <th style="color:#959595;">ObjectId</th>
+                                    <th style="color:#959595;">Name</th>
+                                    <th style="color:#959595;">Username</th>
+                                    <th style="color:#959595;">Avatar</th>
+                                    <th style="color:#959595;">Verified</th>
+                                    <th style="color:#959595;">Gender</th>
+                                    <th style="color:#959595;">Bithday</th>
+                                    <th style="color:#959595;">Mode</th>
+                                    <th style="color:#959595;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>

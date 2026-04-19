@@ -61,18 +61,18 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">Author Id</th>
-                                    <th style="color:#242526;">Author</th>
-                                    <th style="color:#242526;">Method</th>
-                                    <th style="color:#242526;">Amount</th>
-                                    <th style="color:#242526;">Currency</th>
-                                    <th style="color:#242526;">Payoneer email</th>
-                                    <th style="color:#242526;">IBAN</th>
-                                    <th style="color:#242526;">Bank name</th>
-                                    <th style="color:#242526;">Account name</th>
-                                    <th style="color:#242526;">Status</th>
-                                    <th style="color:#242526;">Action</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">Author Id</th>
+                                    <th style="color:#959595;">Author</th>
+                                    <th style="color:#959595;">Method</th>
+                                    <th style="color:#959595;">Amount</th>
+                                    <th style="color:#959595;">Currency</th>
+                                    <th style="color:#959595;">Payoneer email</th>
+                                    <th style="color:#959595;">IBAN</th>
+                                    <th style="color:#959595;">Bank name</th>
+                                    <th style="color:#959595;">Account name</th>
+                                    <th style="color:#959595;">Status</th>
+                                    <th style="color:#959595;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>

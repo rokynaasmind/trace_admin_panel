@@ -60,16 +60,16 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">Trans ID</th>
-                                    <th style="color:#242526;">SKU</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">Trans ID</th>
+                                    <th style="color:#959595;">SKU</th>
                                     <!--<th>Item</th>-->
-                                    <th style="color:#242526;">Price</th>
-                                    <th style="color:#242526;">Currency</th>
-                                    <th style="color:#242526;">PayerID</th>
-                                    <th style="color:#242526;">Payer</th>
-                                    <th style="color:#242526;">Method</th>
-                                    <th style="color:#242526;">Type</th>
+                                    <th style="color:#959595;">Price</th>
+                                    <th style="color:#959595;">Currency</th>
+                                    <th style="color:#959595;">PayerID</th>
+                                    <th style="color:#959595;">Payer</th>
+                                    <th style="color:#959595;">Method</th>
+                                    <th style="color:#959595;">Type</th>
                                 </tr>
                                 </thead>
                                 <tbody>

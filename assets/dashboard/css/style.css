@@ -75,7 +75,7 @@
 :root {
   --primary:#ffffff;
   --secondary:#720e8d;
-  --side-menu-bg:#242526;
+  --side-menu-bg:#959595;
   --menu-txt-color:#00000;
   --menu-txt-hover-color:#ffffff;
   --li-hover-color:#000000;
@@ -112,7 +112,7 @@ body .preloader {
 html {
   position: relative;
   min-height: 100%;
-  background: #242526;
+  background: #959595;
 }
 a:focus,
 a:hover {
@@ -1097,7 +1097,7 @@ h6.h1 {
 .header {
   position: relative;
   z-index: 999;
-  background: #242526;
+  background: #959595;
   /*box-shadow: 1px 0 1px #cecece;*/
   top:0;
 }
@@ -1529,7 +1529,7 @@ textarea {
   }
   .header .top-navbar .navbar-nav .dropdown-menu {
     position: absolute;
-    background:#242526;
+    background:#959595;
   }
   .mega-dropdown .dropdown-menu {
     height: 480px;
@@ -1977,7 +1977,7 @@ textarea {
   margin-bottom: 0;
 }
 .page-titles {
-  /*background: #242526;*/
+  /*background: #959595;*/
   margin: 0 0 30px;
   padding: 15px 10px;
   position: relative;
@@ -2318,7 +2318,7 @@ textarea {
   padding: 0;
 }
 .card {
-  background: #242526 none repeat scroll 0 0;
+  background: #959595 none repeat scroll 0 0;
   margin: 15px 0;
   padding: 20px;
   border: 0 solid #e7e7e7;
@@ -7096,7 +7096,7 @@ img.modal-content {
 */
 
 #loadingModal .modal-dialog, #loadingModal .modal-body {
-    background:#242526;
+    background:#959595;
     color:#fff;
 }
 

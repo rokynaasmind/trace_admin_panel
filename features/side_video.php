@@ -60,17 +60,17 @@ if ($currUser){
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#242526;">ObjectId</th>
-                                    <th style="color:#242526;">Date</th>
-                                    <th style="color:#242526;">Author</th>
-                                    <th style="color:#242526;">Thumbnail</th>
-                                    <th style="color:#242526;">Video</th>
-                                    <th style="color:#242526;">Views</th>
-                                    <th style="color:#242526;">Status</th>
-                                    <th style="color:#242526;">Comments</th>
-                                    <th style="color:#242526;">Likes</th>
-                                    <th style="color:#242526;">Duration</th>
-                                    <th style="color:#242526;">Action</th>
+                                    <th style="color:#959595;">ObjectId</th>
+                                    <th style="color:#959595;">Date</th>
+                                    <th style="color:#959595;">Author</th>
+                                    <th style="color:#959595;">Thumbnail</th>
+                                    <th style="color:#959595;">Video</th>
+                                    <th style="color:#959595;">Views</th>
+                                    <th style="color:#959595;">Status</th>
+                                    <th style="color:#959595;">Comments</th>
+                                    <th style="color:#959595;">Likes</th>
+                                    <th style="color:#959595;">Duration</th>
+                                    <th style="color:#959595;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
