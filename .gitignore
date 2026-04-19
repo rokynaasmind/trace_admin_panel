@@ -1,39 +1,39 @@
-# Environment variables
-.env
-.env.local
-.env.*.local
+# # Environment variables
+# .env
+# .env.local
+# .env.*.local
 
-# IDE
-.idea
+# # IDE
+# .idea
 
-# Dependencies
-composer.lock
-vendor
-node_modules
+# # Dependencies
+# composer.lock
+# vendor
+# node_modules
 
-# Logs
-logs
-*.log
-test_logs
-error_log
+# # Logs
+# logs
+# *.log
+# test_logs
+# error_log
 
-# Test results
-phpunit-test-results
-.phpunit.result.cache
+# # Test results
+# phpunit-test-results
+# .phpunit.result.cache
 
-# Coverage
-coverage.xml
+# # Coverage
+# coverage.xml
 
-# Documentation
-output/
+# # Documentation
+# output/
 
-# OS
-.DS_Store
-Thumbs.db
+# # OS
+# .DS_Store
+# Thumbs.db
 
-# Cache
-.cache
-*.cache
+# # Cache
+# .cache
+# *.cache
 
 
 
