@@ -77,9 +77,9 @@ if (session_status() === PHP_SESSION_NONE) {
 try {
     if ($parse_app_id && $parse_rest_key && $parse_master_key) {
         ParseClient::initialize(
-            $parse_app_id,
-            $parse_rest_key,
-            $parse_master_key
+            'NXgg3EtUgqRLryHea3pjIHWf0qNdyWTxbfZAFQ9b',
+            'X4d5nqHZGa06RutBeJ024Tb73JpfJLWKkKUeTQmt',
+            'cx30LCUA8mfrKhS88Zetjo5PU5syyMk2Vh49n54u'
         );
         ParseClient::setServerURL($parse_server_url, $parse_mount_path);
         ParseClient::setStorage(new ParseSessionStorage());
