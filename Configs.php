@@ -45,10 +45,10 @@ if (!function_exists('getEnvValue')) {
 }
 
 // Prefer PARSE_* keys but support legacy aliases from .env.example.
-$parse_app_id = getEnvValue(['PARSE_APP_ID', 'APPLICATION_ID']);
-$parse_rest_key = getEnvValue(['PARSE_REST_API_KEY', 'REST_API_KEY']);
-$parse_master_key = getEnvValue(['PARSE_MASTER_KEY', 'MASTER_KEY']);
-$parse_server_url = getEnvValue(['PARSE_SERVER_URL'], 'https://parseapi.back4app.com/');
+$parse_app_id = "NXgg3EtUgqRLryHea3pjIHWf0qNdyWTxbfZAFQ9b";
+$parse_rest_key = "X4d5nqHZGa06RutBeJ024Tb73JpfJLWKkKUeTQmt";
+$parse_master_key = "cx30LCUA8mfrKhS88Zetjo5PU5syyMk2Vh49n54u";
+$parse_server_url = 'https://parseapi.back4app.com/';
 
 // Support both "https://host" and "https://host/parse" in PARSE_SERVER_URL.
 $parse_mount_path = '/';
