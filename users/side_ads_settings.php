@@ -112,7 +112,7 @@ $_SESSION['account']  = $accountAdsEnable;
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="account">Google Ads Enable/Disable <span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="account" name="account" disabled>
+                                    <select class="form-control" id="account" name="account">
                                          <option value="'.$statusDisabled1.'">'.$status1.'</option>
                                          <option value="'.$statusDisabled2.'">'.$status2.'</option>
                                     </select>
