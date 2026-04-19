@@ -94,11 +94,14 @@ use Parse\ParseUser;
                                 $count = $query->count(true);
                                 // The count request succeeded. Show the count
                                 //echo "Sean has played " . $count . " games";
+                                
+                                // Calculate percentage, guard against division by zero
+                                $percentage = ($countTotal > 0) ? round($count*100/$countTotal,2) : 0;
         
                                 echo '
                                 
                                 <div class="media-body media-text-left">
-                                    <h2><span style="font-size:18pt;" id="android">'.$count.'</span> ('.round($count*100/$countTotal,2).'%)</h2>
+                                    <h2><span style="font-size:18pt;" id="android">'.$count.'</span> ('.$percentage.'%)</h2>
                                     <p class="m-b-0">Android</p>
                                 </div>
                                 
@@ -122,11 +125,14 @@ use Parse\ParseUser;
                                 $query = new ParseQuery('_Installation');
                                 $query->equalTo('deviceType', 'ios');
                                 $count = $query->count(true);
+                                
+                                // Calculate percentage, guard against division by zero
+                                $percentage = ($countTotal > 0) ? round($count*100/$countTotal,2) : 0;
         
                                 echo '
                                 
                                 <div class="media-body media-text-left">
-                                    <h2><span style="font-size:18pt;" id="ios">'.$count.'</span> ('.round($count*100/$countTotal,2).'%)</h2>
+                                    <h2><span style="font-size:18pt;" id="ios">'.$count.'</span> ('.$percentage.'%)</h2>
                                     <p class="m-b-0">IOS</p>
                                 </div>
                                 
