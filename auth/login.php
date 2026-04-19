@@ -26,40 +26,48 @@ if ($currUser) {
 // LOGIN ------------------------------------------
 if(isset($_POST['username']) && isset($_POST['password'])) {
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    if ($username === '' || $password === '') {
+        showSweetAlert("Error: ", "Username and password are required.", "error");
+    } else {
 
 
-    try {
-        $user = ParseUser::logIn($username, $password);
+        try {
+            $user = ParseUser::logIn($username, $password);
 
-        $currUser = ParseUser::getCurrentUser();
-        if ($currUser->get("role") === 'admin'){
-            { header('Refresh:0; url=../dashboard/panel.php'); }
-        } else {
-            { header('Refresh:0; url=../auth/logout.php'); }
-        }
-        
-        $success = true;
+            $currUser = ParseUser::getCurrentUser();
+            if ($currUser->get("role") === 'admin'){
+                { header('Refresh:0; url=../dashboard/panel.php'); }
+            } else {
+                { header('Refresh:0; url=../auth/logout.php'); }
+            }
+            
+            $success = true;
 
-        /*echo '
-            <div class="text-center">
-                <div class="alert alert-success">
-                    You have successfully logged in. <br>
-                    Please wait...
+            /*echo '
+                <div class="text-center">
+                    <div class="alert alert-success">
+                        You have successfully logged in. <br>
+                        Please wait...
+                    </div>
                 </div>
-            </div>
-        ';*/
-        
+            ';*/
+            
 
-        // error
-    } catch (ParseException $error) {
+            // error
+        } catch (ParseException $error) {
 
-        $e = $error->getMessage();
+            $e = $error->getMessage();
+            if (stripos($e, 'unauthorized') !== false) {
+                $e = 'Parse API authentication failed (401 Unauthorized). Update PARSE_APP_ID, PARSE_REST_API_KEY, and PARSE_MASTER_KEY in .env from Back4App > Settings > Security & Keys.';
+            }
 
-        showSweetAlert("Error: ", $e, "error");
+            showSweetAlert("Error: ", $e, "error");
 
-    } catch (Exception $e) {
+        } catch (Exception $e) {
+        }
     }
 }
 
