@@ -96,7 +96,7 @@ if (file_exists($env_path)) {
 
     <!-- ==================== SECTION 2: DIRECT API TEST ==================== -->
     <div class="section">
-        <h2>🧪 Direct API Test (Using cURL)</h2>
+        <h2>🧪 Direct API Test (Using PHP Streams - No cURL)</h2>
         <p>Tests Parse API directly with loaded credentials:</p>
 
         <?php
@@ -106,22 +106,55 @@ if (file_exists($env_path)) {
         if (!$appId || !$masterKey) {
             echo '<div class="error">❌ Cannot test - credentials not loaded</div>';
         } else {
+            // Helper function using PHP streams
+            function makeAPICall($url, $appId, $masterKey, $method = 'GET', $data = null) {
+                $context = stream_context_create([
+                    'http' => [
+                        'method' => $method,
+                        'header' => [
+                            'X-Parse-Application-Id: ' . $appId,
+                            'X-Parse-Master-Key: ' . $masterKey,
+                            'Content-Type: application/json'
+                        ],
+                        'timeout' => 10
+                    ],
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ]
+                ]);
+
+                if ($data) {
+                    stream_context_set_option($context, ['http' => ['content' => json_encode($data)]]);
+                }
+
+                try {
+                    $response = @file_get_contents($url, false, $context);
+                    $httpCode = 'unknown';
+                    
+                    if (isset($http_response_header)) {
+                        preg_match('/HTTP\/[\d.]+\s+(\d+)/', $http_response_header[0], $matches);
+                        $httpCode = isset($matches[1]) ? (int)$matches[1] : 'unknown';
+                    }
+
+                    return ['code' => $httpCode, 'response' => $response];
+                } catch (Exception $e) {
+                    return ['code' => 'error', 'response' => $e->getMessage()];
+                }
+            }
+
             // Test 1: Server Health
             echo '<h3>Test 1: Server Health</h3>';
             
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://parseapi.back4app.com/parse/health');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $result = makeAPICall('https://parseapi.back4app.com/parse/health', $appId, $masterKey);
             
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            echo '<p>HTTP Status: <strong>' . $result['code'] . '</strong></p>';
 
-            if ($httpCode == 200) {
+            if ($result['code'] == 200) {
                 echo '<div class="success">✅ Parse Server is reachable</div>';
             } else {
-                echo '<div class="error">❌ Parse Server error (Code: ' . $httpCode . ')</div>';
+                echo '<div class="error">❌ Parse Server error (Code: ' . $result['code'] . ')</div>';
+                echo '<div class="code">' . htmlspecialchars($result['response']) . '</div>';
             }
 
             echo '<hr>';
@@ -129,25 +162,12 @@ if (file_exists($env_path)) {
             // Test 2: Query Users with Master Key
             echo '<h3>Test 2: Query Users (Master Key)</h3>';
             
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://parseapi.back4app.com/parse/classes/_User');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'X-Parse-Application-Id: ' . $appId,
-                'X-Parse-Master-Key: ' . $masterKey,
-                'Content-Type: application/json'
-            ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $result = makeAPICall('https://parseapi.back4app.com/parse/classes/_User', $appId, $masterKey);
 
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $curlError = curl_error($ch);
-            curl_close($ch);
+            echo '<p>HTTP Status: <strong>' . $result['code'] . '</strong></p>';
 
-            echo '<p>HTTP Status: <strong>' . $httpCode . '</strong></p>';
-
-            if ($httpCode == 200) {
-                $data = json_decode($response, true);
+            if ($result['code'] == 200) {
+                $data = json_decode($result['response'], true);
                 echo '<div class="success">';
                 echo '✅ API Call Successful!<br>';
                 echo 'Users in database: ' . count($data['results'] ?? []) . '<br>';
@@ -161,10 +181,10 @@ if (file_exists($env_path)) {
                     }
                     echo '</div>';
                 }
-            } elseif ($httpCode == 401) {
+            } elseif ($result['code'] == 401) {
                 echo '<div class="error">';
                 echo '❌ Unauthorized (401)<br>';
-                echo 'Message: ' . htmlspecialchars($response);
+                echo 'Message: ' . htmlspecialchars($result['response']);
                 echo '</div>';
 
                 echo '<div class="info" style="margin-top: 10px;">';
@@ -178,11 +198,8 @@ if (file_exists($env_path)) {
                 echo '</div>';
             } else {
                 echo '<div class="error">';
-                echo '❌ Error (' . $httpCode . ')<br>';
-                if ($curlError) {
-                    echo 'cURL Error: ' . htmlspecialchars($curlError);
-                }
-                echo '<br>Response: ' . htmlspecialchars(substr($response, 0, 200));
+                echo '❌ Error (' . $result['code'] . ')<br>';
+                echo '<br>Response: ' . htmlspecialchars(substr($result['response'], 0, 300));
                 echo '</div>';
             }
 
@@ -201,36 +218,22 @@ if (file_exists($env_path)) {
 
             echo '<p>Attempting to create user: <code>' . $testUsername . '</code></p>';
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://parseapi.back4app.com/parse/classes/_User');
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($testData));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'X-Parse-Application-Id: ' . $appId,
-                'X-Parse-Master-Key: ' . $masterKey,
-                'Content-Type: application/json'
-            ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $result = makeAPICall('https://parseapi.back4app.com/parse/classes/_User', $appId, $masterKey, 'POST', $testData);
 
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            echo '<p>HTTP Status: <strong>' . $result['code'] . '</strong></p>';
 
-            echo '<p>HTTP Status: <strong>' . $httpCode . '</strong></p>';
-
-            if ($httpCode == 201 || $httpCode == 200) {
-                $data = json_decode($response, true);
+            if ($result['code'] == 201 || $result['code'] == 200) {
+                $data = json_decode($result['response'], true);
                 echo '<div class="success">';
                 echo '✅ User created successfully!<br>';
                 echo 'User ID: ' . ($data['objectId'] ?? 'N/A');
                 echo '</div>';
-            } elseif ($httpCode == 401) {
+            } elseif ($result['code'] == 401) {
                 echo '<div class="error">❌ Unauthorized - Same credential issue</div>';
             } else {
                 echo '<div class="error">';
-                echo '❌ Error (' . $httpCode . ')<br>';
-                echo 'Response: ' . htmlspecialchars($response);
+                echo '❌ Error (' . $result['code'] . ')<br>';
+                echo 'Response: ' . htmlspecialchars($result['response']);
                 echo '</div>';
             }
         }
