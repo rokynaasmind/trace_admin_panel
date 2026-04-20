@@ -90,9 +90,10 @@ if ($currUser){
                                         $date= $cObj->getCreatedAt();
                                         $created = date_format($date,"d/m/Y");
 
-                                        $name = $cObj->get('Author')->get('name');
+                                        $author = $cObj->get('Author');
+                                        $name = $author ? $author->get('name') : 'Unknown';
 
-                                        $gender = $cObj->get('Author')->get('gender');
+                                        $gender = $author ? $author->get('gender') : '';
 
                                         if ($gender === "MAL"){
                                             $UserGender = "Male";

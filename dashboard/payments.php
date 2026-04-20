@@ -74,7 +74,7 @@ if (!$currUser) {
 
         include '../admin/header_admin.php';
         include '../admin/left_sidebar_admin.php';
-        include '../accounting/side_payment.php'; // Page wrapper
+        include '../side_payment.php'; // Page wrapper
 
         ?>
 
