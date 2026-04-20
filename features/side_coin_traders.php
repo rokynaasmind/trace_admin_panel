@@ -302,7 +302,7 @@ try {
                                             <td>'.$createdDate.'</td>
                                             <td style="text-align: center;">
                                                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                                    <span class="status-badge '.$statusClass.'" style="white-space: nowrap;">'.$statusText.'</span>
+                                                    
                                                     <form method="post" style="display:inline; margin: 0;">
                                                         <input type="hidden" name="action" value="toggle_status">
                                                         <input type="hidden" name="trader_id" value="'.$traderId.'">
@@ -382,10 +382,10 @@ try {
 
 <!-- Toggle Switch CSS -->
 <style>
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: -3px; background-color: white; transition: .3s; }
     input:checked + .slider { background-color: #6c5ce7; }
     input:checked + .slider:before { transform: translateX(20px); }
     .slider.round { border-radius: 24px; }
