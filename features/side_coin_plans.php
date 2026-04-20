@@ -124,7 +124,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
 
     .switch { position: relative; display: inline-block; width: 44px; height: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; }
+    .slider { position: absolute; cursor: pointer; top: 12px; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; }
     .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: -3px; background-color: white; transition: .3s; }
     input:checked + .slider { background-color: #6c5ce7; }
     input:checked + .slider:before { transform: translateX(20px); }
