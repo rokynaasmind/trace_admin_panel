@@ -160,9 +160,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'add_coins' && $trader) {
         $requestCount = 0;
         try {
             $rQuery = new ParseQuery("CoinRequests");
-            $traderPointer = ParseObject::create("CoinTraders");
-            $traderPointer->setObjectId($traderId);
-            $rQuery->equalTo("trader", $traderPointer);
+            $traderQuery = new ParseQuery("CoinTraders");
+            $traderObj = $traderQuery->get($traderId, true);
+            $rQuery->equalTo("trader", $traderObj);
             $requestCount = $rQuery->count(true);
         } catch (ParseException $e) { /* ignore */ }
         ?>
