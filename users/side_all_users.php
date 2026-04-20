@@ -107,8 +107,13 @@ function array_get_by_index($index, $array) {
                                         if ($cObj->get("avatar") !== null) {
 
                                             $photos = $cObj->get('avatar');
-
-                                            $profilePhotoUrl = $photos->getURL();
+                                            
+                                            // Check if avatar is a ParseFile object or a string URL
+                                            if (is_object($photos) && method_exists($photos, 'getURL')) {
+                                                $profilePhotoUrl = $photos->getURL();
+                                            } else {
+                                                $profilePhotoUrl = (string)$photos;
+                                            }
                                                 
                                             $avatar = "<span><a href='#' onclick='showImage(\"$profilePhotoUrl\")' class=\"badge badge-info\"  style=\"background:#5d0375;\">View</a></span>";
 
@@ -118,7 +123,13 @@ function array_get_by_index($index, $array) {
                                         
                                         if ($cObj->get("photo_verified_file") !== null){
                                             
-                                            $profileVerifiedPhotoUrl = $cObj->get("photo_verified_file")->getURL();
+                                            $verifiedFile = $cObj->get("photo_verified_file");
+                                            // Check if photo_verified_file is a ParseFile object or a string URL
+                                            if (is_object($verifiedFile) && method_exists($verifiedFile, 'getURL')) {
+                                                $profileVerifiedPhotoUrl = $verifiedFile->getURL();
+                                            } else {
+                                                $profileVerifiedPhotoUrl = (string)$verifiedFile;
+                                            }
                                             $avatarVerificaton = "<span><a href='#' onclick='showImage(\"$profileVerifiedPhotoUrl\")' class=\"badge badge-info\"  style=\"background:#5d0375;\">View</a></span>";
                                             
                                         } else {
