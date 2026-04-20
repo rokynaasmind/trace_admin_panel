@@ -261,9 +261,15 @@ try {
 
                                         $avatar = '';
                                         if ($user && $user->get("avatar")) {
-                                            $avatar = $user->get("avatar")->getURL();
+                                            $avatarFile = $user->get("avatar");
+                                            // Check if avatar is a ParseFile object or a string URL
+                                            if (is_object($avatarFile) && method_exists($avatarFile, 'getURL')) {
+                                                $avatar = $avatarFile->getURL();
+                                            } else {
+                                                $avatar = (string)$avatarFile;
+                                            }
                                         }
-                                        $avatarHtml = $avatar ? '<img src="'.htmlspecialchars($avatar).'" alt="">' : '<img src="../assets/dashboard/images/default-avatar.png" alt="">';
+                                        $avatarHtml = $avatar ? '<img src="'.htmlspecialchars($avatar).'" alt="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">' : '<div style="width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa fa-user"></i></div>';
 
                                         // Badge icon (random color for demo)
                                         $badgeColors = ['💙', '🩷', '💜', '💚'];

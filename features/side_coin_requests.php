@@ -222,7 +222,12 @@ $filterTraderId = $_GET['trader_id'] ?? '';
                                         $reqUserHandle = $reqUser ? htmlspecialchars($reqUser->get("username") ?? '') : '';
                                         $reqUserAvatar = '';
                                         if ($reqUser && $reqUser->get("avatar")) {
-                                            $reqUserAvatar = $reqUser->get("avatar")->getURL();
+                                            $avatarFile = $reqUser->get("avatar");
+                                            if (is_object($avatarFile) && method_exists($avatarFile, 'getURL')) {
+                                                $reqUserAvatar = $avatarFile->getURL();
+                                            } else {
+                                                $reqUserAvatar = (string)$avatarFile;
+                                            }
                                         }
 
                                         // Trader
@@ -253,8 +258,8 @@ $filterTraderId = $_GET['trader_id'] ?? '';
                                         $createdDate = $createdAt ? $createdAt->format("M d, Y h:i A") : '';
 
                                         $reqUserAvatarHtml = $reqUserAvatar
-                                            ? '<img src="'.htmlspecialchars($reqUserAvatar).'" alt="">'
-                                            : '<img src="../assets/dashboard/images/default-avatar.png" alt="">';
+                                            ? '<img src="'.htmlspecialchars($reqUserAvatar).'" alt="" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">'
+                                            : '<div style="width: 36px; height: 36px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 16px;"><i class="fa fa-user"></i></div>';
 
                                         echo '
                                         <tr>
