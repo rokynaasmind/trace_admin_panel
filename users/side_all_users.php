@@ -92,7 +92,7 @@ function array_get_by_index($index, $array) {
                                     $query = new ParseQuery("_User");
                                     $query->descending('createdAt');
                                     $query->limit(1500);
-                                    $catArray = $query->find(false);
+                                    $catArray = $query->find(true);
 
                                     foreach ($catArray as $iValue) {
                                         // Get Parse Object
