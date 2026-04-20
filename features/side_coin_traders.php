@@ -79,11 +79,35 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_trader') {
 
 // Fetch all users for dropdown
 $allUsers = [];
+$existingTraderUserIds = [];
+try {
+    // Get all existing trader user IDs
+    $traderQuery = new ParseQuery("CoinTraders");
+    $traderQuery->includeKey("user");
+    $traderQuery->limit(1500);
+    $existingTraders = $traderQuery->find(true);
+    foreach ($existingTraders as $t) {
+        $u = $t->get("user");
+        if ($u) {
+            $existingTraderUserIds[] = $u->getObjectId();
+        }
+    }
+} catch (ParseException $e) {
+    // ignore
+}
+
 try {
     $userQuery = new ParseQuery("_User");
     $userQuery->descending('createdAt');
     $userQuery->limit(1500);
-    $allUsers = $userQuery->find(false);
+    $allUsersTemp = $userQuery->find(true);
+    
+    // Filter out users who are already traders
+    foreach ($allUsersTemp as $user) {
+        if (!in_array($user->getObjectId(), $existingTraderUserIds)) {
+            $allUsers[] = $user;
+        }
+    }
 } catch (ParseException $e) {
     // ignore
 }
@@ -127,8 +151,9 @@ try {
     .row-half { display: flex; gap: 10px; }
     .row-half .form-group { flex: 1; }
     .status-toggle { cursor: pointer; }
-    .badge-active { background: #00b894; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
-    .badge-inactive { background: #b2bec3; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+    .badge-active { background: #00b894; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .badge-inactive { background: #b2bec3; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .action-icons a, .action-icons button {
         border: none; background: none; cursor: pointer; font-size: 16px;
         color: #636e72; margin: 0 3px; padding: 4px;
@@ -275,16 +300,19 @@ try {
                                             <td><span class="coin-icon">🪙</span> '.$spentCoins.'</td>
                                             <td>'.$mobile.'</td>
                                             <td>'.$createdDate.'</td>
-                                            <td>
-                                                <form method="post" style="display:inline;">
-                                                    <input type="hidden" name="action" value="toggle_status">
-                                                    <input type="hidden" name="trader_id" value="'.$traderId.'">
-                                                    <input type="hidden" name="new_status" value="'.$toggleValue.'">
-                                                    <label class="switch">
-                                                        <input type="checkbox" '.($isActive ? 'checked' : '').' onchange="this.form.submit()">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </form>
+                                            <td style="text-align: center;">
+                                                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                                    <span class="status-badge '.$statusClass.'" style="white-space: nowrap;">'.$statusText.'</span>
+                                                    <form method="post" style="display:inline; margin: 0;">
+                                                        <input type="hidden" name="action" value="toggle_status">
+                                                        <input type="hidden" name="trader_id" value="'.$traderId.'">
+                                                        <input type="hidden" name="new_status" value="'.$toggleValue.'">
+                                                        <label class="switch" style="margin: 0;">
+                                                            <input type="checkbox" '.($isActive ? 'checked' : '').' onchange="this.form.submit()">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </form>
+                                                </div>
                                             </td>
                                             <td class="action-icons">
                                                 <a href="../dashboard/edit_coin_trader.php?objectId='.$traderId.'" title="Edit"><i class="fa fa-pencil"></i></a>
@@ -319,11 +347,15 @@ try {
                 <label>Select User</label>
                 <select name="user_id" required>
                     <option value="">Select User</option>
-                    <?php foreach ($allUsers as $u): ?>
-                        <option value="<?php echo $u->getObjectId(); ?>">
-                            <?php echo htmlspecialchars($u->get('name') ?? $u->get('username') ?? $u->getObjectId()); ?> (@<?php echo htmlspecialchars($u->get('username') ?? ''); ?>)
-                        </option>
-                    <?php endforeach; ?>
+                    <?php if (count($allUsers) === 0): ?>
+                        <option disabled>All users are already traders</option>
+                    <?php else: ?>
+                        <?php foreach ($allUsers as $u): ?>
+                            <option value="<?php echo $u->getObjectId(); ?>">
+                                <?php echo htmlspecialchars($u->get('name') ?? $u->get('username') ?? $u->getObjectId()); ?> (@<?php echo htmlspecialchars($u->get('username') ?? ''); ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
             </div>
             <div class="form-group">
