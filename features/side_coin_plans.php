@@ -22,7 +22,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_plan') {
     $coins = (int)($_POST['coins'] ?? 0);
     $amount = (float)($_POST['amount'] ?? 0);
     $productKey = $_POST['product_key'] ?? '';
-    $isPopular = isset($_POST['is_popular']) ? true : false;
 
     if ($coins > 0 && $amount > 0) {
         try {
@@ -30,7 +29,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_plan') {
             $plan->set("coins", $coins);
             $plan->set("amount", $amount);
             $plan->set("productKey", $productKey);
-            $plan->set("isPopular", $isPopular);
             $plan->set("isActive", true);
             $plan->save(true);
 
@@ -48,7 +46,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_plan') {
     $coins = (int)($_POST['coins'] ?? 0);
     $amount = (float)($_POST['amount'] ?? 0);
     $productKey = $_POST['product_key'] ?? '';
-    $isPopular = isset($_POST['is_popular']) ? true : false;
 
     if ($planId && $coins > 0 && $amount > 0) {
         try {
@@ -57,7 +54,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_plan') {
             $plan->set("coins", $coins);
             $plan->set("amount", $amount);
             $plan->set("productKey", $productKey);
-            $plan->set("isPopular", $isPopular);
             $plan->save(true);
 
             echo '<script>window.location.href = "../dashboard/coin_plans.php?updated=1";</script>';
@@ -77,22 +73,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'toggle_active') {
             $query = new ParseQuery("CoinPlans");
             $plan = $query->get($planId, true);
             $plan->set("isActive", $newStatus);
-            $plan->save(true);
-        } catch (ParseException $e) {
-            $errorMsg = $e->getMessage();
-        }
-    }
-}
-
-// Handle Toggle Popular
-if (isset($_POST['action']) && $_POST['action'] === 'toggle_popular') {
-    $planId = $_POST['plan_id'] ?? '';
-    $newStatus = $_POST['new_status'] === '1';
-    if ($planId) {
-        try {
-            $query = new ParseQuery("CoinPlans");
-            $plan = $query->get($planId, true);
-            $plan->set("isPopular", $newStatus);
             $plan->save(true);
         } catch (ParseException $e) {
             $errorMsg = $e->getMessage();
@@ -170,6 +150,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
     .modal-box input, .modal-box select {
         width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px;
         font-size: 14px; outline: none;
+        color: #333;
     }
     .modal-box input:focus { border-color: #6c5ce7; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
@@ -233,7 +214,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                                     <th>Coins</th>
                                     <th>Amount ($)</th>
                                     <th>Product Key</th>
-                                    <th>Popular</th>
                                     <th>Active</th>
                                     <th>Actions</th>
                                 </tr>
@@ -252,9 +232,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                                         $coins = $plan->get("coins") ?? 0;
                                         $amount = $plan->get("amount") ?? 0;
                                         $productKey = htmlspecialchars($plan->get("productKey") ?? '');
-                                        $isPopular = $plan->get("isPopular") ?? false;
                                         $isActive = $plan->get("isActive") ?? false;
-                                        $popularToggle = $isPopular ? '0' : '1';
                                         $activeToggle = $isActive ? '0' : '1';
 
                                         echo '
@@ -263,17 +241,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                                             <td><span class="coin-badge">🪙</span> '.number_format($coins).'</td>
                                             <td>'.number_format($amount).' $</td>
                                             <td>'.$productKey.'</td>
-                                            <td>
-                                                <form method="post" style="display:inline;">
-                                                    <input type="hidden" name="action" value="toggle_popular">
-                                                    <input type="hidden" name="plan_id" value="'.$planId.'">
-                                                    <input type="hidden" name="new_status" value="'.$popularToggle.'">
-                                                    <label class="switch">
-                                                        <input type="checkbox" '.($isPopular ? 'checked' : '').' onchange="this.form.submit()">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </form>
-                                            </td>
                                             <td>
                                                 <form method="post" style="display:inline;">
                                                     <input type="hidden" name="action" value="toggle_active">
@@ -286,7 +253,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                                                 </form>
                                             </td>
                                             <td>
-                                                <button class="action-btn edit" onclick="openEditPlanModal(\''.$planId.'\', '.$coins.', '.$amount.', \''.$productKey.'\', '.($isPopular ? 'true' : 'false').')" title="Edit">
+                                                <button class="action-btn edit" onclick="openEditPlanModal(\''.$planId.'\', '.$coins.', '.$amount.', \''.$productKey.'\')" title="Edit">
                                                     <i class="fa fa-pencil"></i>
                                                 </button>
                                                 <form method="post" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this plan?\')">
@@ -301,7 +268,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                                         $index++;
                                     }
                                 } catch (ParseException $e) {
-                                    echo '<tr><td colspan="7" class="text-center text-danger">' . htmlspecialchars($e->getMessage()) . '</td></tr>';
+                                    echo '<tr><td colspan="6" class="text-center text-danger">' . htmlspecialchars($e->getMessage()) . '</td></tr>';
                                 }
                                 ?>
                                 </tbody>
@@ -333,12 +300,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                 <label>Product Key</label>
                 <input type="text" name="product_key" placeholder="In-app purchase product key">
             </div>
-            <div class="form-group">
-                <div class="checkbox-row">
-                    <input type="checkbox" name="is_popular" id="create_popular">
-                    <label for="create_popular" style="margin:0;">Mark as Popular</label>
-                </div>
-            </div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeCreatePlanModal()">Cancel</button>
                 <button type="submit" class="btn-save">Create</button>
@@ -367,12 +328,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
                 <label>Product Key</label>
                 <input type="text" name="product_key" id="edit_product_key">
             </div>
-            <div class="form-group">
-                <div class="checkbox-row">
-                    <input type="checkbox" name="is_popular" id="edit_popular">
-                    <label for="edit_popular" style="margin:0;">Mark as Popular</label>
-                </div>
-            </div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeEditPlanModal()">Cancel</button>
                 <button type="submit" class="btn-save">Save Changes</button>
@@ -388,12 +343,11 @@ function openCreatePlanModal() {
 function closeCreatePlanModal() {
     document.getElementById('createPlanModal').classList.remove('active');
 }
-function openEditPlanModal(id, coins, amount, productKey, isPopular) {
+function openEditPlanModal(id, coins, amount, productKey) {
     document.getElementById('edit_plan_id').value = id;
     document.getElementById('edit_coins').value = coins;
     document.getElementById('edit_amount').value = amount;
     document.getElementById('edit_product_key').value = productKey;
-    document.getElementById('edit_popular').checked = isPopular;
     document.getElementById('editPlanModal').classList.add('active');
 }
 function closeEditPlanModal() {
