@@ -121,6 +121,15 @@
                 </li>
     
 
+                <li>
+                    <a class="has-arrow  " href="../dashboard/coin_traders.php" aria-expanded="false"><i class="fa fa-diamond"></i><span class="hide-menu">Coin System</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="../dashboard/coin_traders.php">Coin Traders</a></li>
+                        <li><a href="../dashboard/coin_plans.php">Coin Plans</a></li>
+                        <li><a href="../dashboard/coin_requests.php">Coin Requests</a></li>
+                    </ul>
+                </li>
+
                 <!--<li class="nav-label font-weight-bold"  style="color:black;">Accounting</li>-->
                 <li>
                     <a href="../dashboard/payments.php" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Payments</span></a>
