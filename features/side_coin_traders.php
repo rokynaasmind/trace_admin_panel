@@ -26,10 +26,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_trader') {
 
     if ($userId && $initialCoin > 0) {
         try {
+            // Get user first
+            $userQuery = new ParseQuery("_User");
+            $user = $userQuery->get($userId, true);
+
             $trader = ParseObject::create("CoinTraders");
-            $userPointer = ParseObject::create("_User");
-            $userPointer->setObjectId($userId);
-            $trader->set("user", $userPointer);
+            $trader->set("user", $user);
             $trader->set("coinBalance", $initialCoin);
             $trader->set("spentCoins", 0);
             $trader->set("countryCode", $countryCode);
@@ -109,6 +111,7 @@ try {
     .modal-box input, .modal-box select {
         width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px;
         font-size: 14px; outline: none; transition: border-color 0.2s;
+        color: #333;
     }
     .modal-box input:focus, .modal-box select:focus { border-color: #6c5ce7; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
