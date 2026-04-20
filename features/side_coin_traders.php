@@ -137,7 +137,7 @@ try {
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px 0; flex-wrap: wrap; gap: 10px;
     }
-    .page-header-custom h2 { font-size: 22px; font-weight: 600; color: #2d3436; margin: 0; }
+    .page-header-custom h2 { font-size: 22px; font-weight: 600; color: #fff; margin: 0; }
     .page-header-custom p { color: #636e72; margin: 2px 0 0 0; font-size: 14px; }
     .header-actions { display: flex; gap: 10px; align-items: center; }
     .btn-add-trader {
@@ -206,7 +206,7 @@ try {
                         <div class="table-responsive">
                             <table id="coinTradersTable" class="display nowrap table table-hover" cellspacing="0" width="100%">
                                 <thead>
-                                <tr style="background: #f8f9fa; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #636e72;">
+                                <tr style="text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #636e72;">
                                     <th>User</th>
                                     <th>Unique ID</th>
                                     <th>Coin Balance</th>

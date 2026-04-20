@@ -121,7 +121,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_plan') {
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px 0; flex-wrap: wrap; gap: 10px;
     }
-    .coin-plans-header h2 { font-size: 22px; font-weight: 600; color: #2d3436; margin: 0; }
+    .coin-plans-header h2 { font-size: 22px; font-weight: 600; color: #fff; margin: 0; }
     .coin-plans-header p { color: #636e72; margin: 2px 0 0 0; font-size: 14px; }
     .btn-create-plan {
         background: #6c5ce7; color: #fff; border: none; padding: 10px 20px;

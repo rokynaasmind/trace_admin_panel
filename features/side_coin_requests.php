@@ -89,7 +89,7 @@ $filterTraderId = $_GET['trader_id'] ?? '';
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px 0; flex-wrap: wrap; gap: 10px;
     }
-    .requests-header h2 { font-size: 22px; font-weight: 600; color: #2d3436; margin: 0; }
+    .requests-header h2 { font-size: 22px; font-weight: 600; color: #fff; margin: 0; }
     .requests-header p { color: #636e72; margin: 2px 0 0 0; font-size: 14px; }
     .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
     .filter-tab {
@@ -179,7 +179,7 @@ $filterTraderId = $_GET['trader_id'] ?? '';
                         <div class="table-responsive">
                             <table class="table" id="coinRequestsTable" width="100%">
                                 <thead>
-                                <tr style="background: #f8f9fa; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #636e72;">
+                                <tr style="text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #636e72;">
                                     <th>Request ID</th>
                                     <th>User (Requester)</th>
                                     <th>Trader</th>
