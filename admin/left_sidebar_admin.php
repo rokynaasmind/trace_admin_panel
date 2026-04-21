@@ -44,8 +44,13 @@
                 <li>
                     <a class="has-arrow  " href="../dashboard/posts.php" aria-expanded="false"><i class="fa fa-newspaper-o"></i><span class="hide-menu">Posts</span></a>
                 </li>
+
                 <li>
                     <a href="../dashboard/comments.php" aria-expanded="false"><i class="fa fa-comments"></i><span class="hide-menu">Comments</span></a>
+                </li>
+
+                <li>
+                    <a href="../dashboard/banners.php" aria-expanded="false"><i class="fa fa-picture-o"></i><span class="hide-menu">Banners</span></a>
                 </li>
 
                 <!-- <li>
