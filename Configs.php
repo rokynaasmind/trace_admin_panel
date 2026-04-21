@@ -66,7 +66,7 @@ if ($parsed_url !== false && isset($parsed_url['scheme'], $parsed_url['host'])) 
     $parse_server_url = $server_base;
 }
 
-$app_name = $_ENV['APP_NAME'] ?? 'Trace';
+$app_name = $_ENV['APP_NAME'] ?? 'MyParty';
 $default_icon_color = $_ENV['DEFAULT_ICON_COLOR'] ?? 'text-white'; // use Bootstrap text color sintax
 
 use Parse\ParseClient;
