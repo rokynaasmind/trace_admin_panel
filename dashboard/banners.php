@@ -7,6 +7,7 @@ use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseFile;
 use Parse\ParseException;
+use Parse\ParseClient;
 
 $action = $_GET['action'] ?? '';
 $message = '';
@@ -19,11 +20,17 @@ if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $banner = new ParseObject('Banner');
             $banner->set('title', $title);
+            
+            // Upload file using useMasterKey to bypass public upload restrictions
             $file = ParseFile::createFromFile($image['tmp_name'], $image['name']);
+            $file->save(true); // true = use Master Key
+            
             $banner->set('image', $file);
-            $banner->save();
+            $banner->save(true); // true = use Master Key
             $message = 'Banner added successfully!';
         } catch (ParseException $e) {
+            $message = 'Error: ' . $e->getMessage();
+        } catch (Exception $e) {
             $message = 'Error: ' . $e->getMessage();
         }
     } else {
@@ -36,9 +43,11 @@ if ($action === 'delete' && isset($_GET['id'])) {
     try {
         $query = new ParseQuery('Banner');
         $banner = $query->get($_GET['id']);
-        $banner->destroy();
+        $banner->destroy(true); // true = use Master Key
         $message = 'Banner deleted.';
     } catch (ParseException $e) {
+        $message = 'Error: ' . $e->getMessage();
+    } catch (Exception $e) {
         $message = 'Error: ' . $e->getMessage();
     }
 }
@@ -54,13 +63,20 @@ if ($action === 'edit' && isset($_GET['id'])) {
             $banner->set('title', $title);
         }
         if ($image && $image['tmp_name']) {
-            $file = ParseFile::createFromFile($image['tmp_name'], $image['name']);
-            $banner->set('image', $file);
+            try {
+                $file = ParseFile::createFromFile($image['tmp_name'], $image['name']);
+                $file->save(true); // true = use Master Key
+                $banner->set('image', $file);
+            } catch (Exception $e) {
+                $message = 'Error uploading file: ' . $e->getMessage();
+            }
         }
         try {
-            $banner->save();
+            $banner->save(true); // true = use Master Key
             $message = 'Banner updated!';
         } catch (ParseException $e) {
+            $message = 'Error: ' . $e->getMessage();
+        } catch (Exception $e) {
             $message = 'Error: ' . $e->getMessage();
         }
     }
