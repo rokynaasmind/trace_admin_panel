@@ -1,6 +1,6 @@
 # Environment Configuration Guide
 
-**Project:** Trace Admin Panel  
+**Project:** MyParty Admin Panel  
 **Updated:** 2024  
 **Status:** ✅ Environment configuration system implemented
 
@@ -145,7 +145,7 @@ project/
 ```env
 APP_ENV=development|production
 APP_DEBUG=true|false
-APP_NAME=Trace Admin Panel
+APP_NAME=MyParty Admin Panel
 WEBSITE_PATH=http://localhost:8000|https://yourdomain.com
 ```
 
@@ -221,7 +221,7 @@ try {
 } catch (Exception $e) {
     if ($debug === 'true') {
         // Show detailed error
-        die($e->getMessage() . "\n" . $e->getTraceAsString());
+        die($e->getMessage() . "\n" . $e->getMyPartyAsString());
     } else {
         // Show generic error
         die("An error occurred. Please contact support.");

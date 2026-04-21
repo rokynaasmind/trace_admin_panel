@@ -183,7 +183,7 @@ JAVASCRIPT_KEY=YOUR_JAVASCRIPT_KEY
 APP_ENV=development
 APP_DEBUG=true
 WEBSITE_PATH=http://localhost:8000
-APP_NAME=Trace
+APP_NAME=MyParty
 
 # Enhanced Logging
 LOG_LEVEL=debug
@@ -251,7 +251,7 @@ JAVASCRIPT_KEY=YOUR_PROD_JAVASCRIPT_KEY
 APP_ENV=production
 APP_DEBUG=false
 WEBSITE_PATH=https://yourdomain.com
-APP_NAME=Trace
+APP_NAME=MyParty
 
 # Minimal Logging
 LOG_LEVEL=error
@@ -448,8 +448,8 @@ project/
             <tr>
                 <td>APP_NAME</td>
                 <td>Application name</td>
-                <td>Trace</td>
-                <td>Trace</td>
+                <td>MyParty</td>
+                <td>MyParty</td>
             </tr>
             <tr>
                 <td>WEBSITE_PATH</td>

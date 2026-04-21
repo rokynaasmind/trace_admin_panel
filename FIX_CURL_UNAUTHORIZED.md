@@ -74,7 +74,7 @@ http://168.144.65.62:8000/api_test.php
 ### 1. `.env` ফাইল verify করুন
 এই ফাইলটি খুলুন এবং চেক করুন:
 ```
-c:\wamp64\www\trace_admin_panel\.env
+c:\wamp64\www\MyParty_admin_panel\.env
 ```
 
 হওয়া উচিত:
