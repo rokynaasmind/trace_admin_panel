@@ -4,6 +4,43 @@ use Parse\ParseException;
 use Parse\ParseQuery;
 use Parse\ParseUser;
 
+function getDashboardCount(ParseQuery $query)
+{
+    try {
+        return (int) $query->count();
+    } catch (Exception $e) {
+        return 0;
+    }
+}
+
+$registeredTodayCount = 0;
+$totalUsersCount = 0;
+$messagesCount = 0;
+$videosCount = 0;
+$streamingsCount = 0;
+$challengesCount = 0;
+$categoriesCount = 0;
+$storiesCount = 0;
+
+try {
+    $registeredTodayQuery = new ParseQuery('_User');
+    $registeredTodayQuery->greaterThanOrEqualToRelativeTime('createdAt', '24 hrs ago');
+    $registeredTodayCount = getDashboardCount($registeredTodayQuery);
+
+    $totalUsersCount = getDashboardCount(new ParseQuery('_User'));
+
+    $messagesQuery = new ParseQuery('Message');
+    $messagesQuery->doesNotExist('call');
+    $messagesCount = getDashboardCount($messagesQuery);
+
+    $videosCount = getDashboardCount(new ParseQuery('Video'));
+    $streamingsCount = getDashboardCount(new ParseQuery('Streaming'));
+    $challengesCount = getDashboardCount(new ParseQuery('Challenge'));
+    $categoriesCount = getDashboardCount(new ParseQuery('Category'));
+    $storiesCount = getDashboardCount(new ParseQuery('Stories'));
+} catch (Exception $e) {
+}
+
 ?>
 
 <div class="page-wrapper">
@@ -31,7 +68,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="registered_today" style="min-height: 35px;">⏳</h2>
+                            <h2 id="registered_today" style="min-height: 35px;"><?php echo $registeredTodayCount; ?></h2>
                             <p class="m-b-0">Registered today</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -46,7 +83,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="total_users" style="min-height: 35px;">⏳</h2>
+                            <h2 id="total_users" style="min-height: 35px;"><?php echo $totalUsersCount; ?></h2>
                             <p class="m-b-0">Total Users</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -61,7 +98,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="messages" style="min-height: 35px;">⏳</h2>
+                            <h2 id="messages" style="min-height: 35px;"><?php echo $messagesCount; ?></h2>
                             <p class="m-b-0">Messages</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -76,7 +113,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="videos" style="min-height: 35px;">⏳</h2>
+                            <h2 id="videos" style="min-height: 35px;"><?php echo $videosCount; ?></h2>
                             <p class="m-b-0">Videos</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -91,7 +128,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="streamings" style="min-height: 35px;">⏳</h2>
+                            <h2 id="streamings" style="min-height: 35px;"><?php echo $streamingsCount; ?></h2>
                             <p class="m-b-0">Streamings</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -106,7 +143,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="challenges" style="min-height: 35px;">⏳</h2>
+                            <h2 id="challenges" style="min-height: 35px;"><?php echo $challengesCount; ?></h2>
                             <p class="m-b-0">All challenges</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -121,7 +158,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="categories" style="min-height: 35px;">⏳</h2>
+                            <h2 id="categories" style="min-height: 35px;"><?php echo $categoriesCount; ?></h2>
                             <p class="m-b-0">Categories</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -136,7 +173,7 @@ use Parse\ParseUser;
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="stories" style="min-height: 35px;">⏳</h2>
+                            <h2 id="stories" style="min-height: 35px;"><?php echo $storiesCount; ?></h2>
                             <p class="m-b-0">Stories</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -159,13 +196,11 @@ use Parse\ParseUser;
                         clearTimeout(timeout);
                         if (data.success) {
                             document.getElementById(elementId).textContent = data.data;
-                        } else {
-                            document.getElementById(elementId).textContent = '❌ Error';
                         }
                     })
                     .catch(error => {
                         clearTimeout(timeout);
-                        document.getElementById(elementId).textContent = '⚠️ N/A';
+                        // Keep the server-rendered count when the async refresh fails.
                     });
             }
 
