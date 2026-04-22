@@ -251,7 +251,11 @@ try {
                                     $query->descending('createdAt');
                                     $query->limit(10);
                                     $query->notEqualTo('objectId', $cuObjectID);
-                                    $catArray = $query->find(false);
+                                    $catArray = $query->find(true);
+
+                                    if (count($catArray) === 0) {
+                                        echo '<tr><td colspan="6" class="text-center text-warning font-weight-bold">No users found</td></tr>';
+                                    }
 
                                     foreach ($catArray as $iValue) {
 
