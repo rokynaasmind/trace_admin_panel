@@ -56,7 +56,7 @@ try {
 ?>
 
 <style>
-    .f-s-60 {
+    .f-s-40 {
         font-size: 40px!important;
     }
 </style>
@@ -90,7 +90,7 @@ try {
                             <p class="m-b-0">Registered today</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-user-plus f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-user-plus f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@ try {
                             <p class="m-b-0">Total Users</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-users f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-users f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ try {
                             <p class="m-b-0">Messages</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-comments-o f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-comments-o f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ try {
                             <p class="m-b-0">Videos</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-play f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-play f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -150,7 +150,7 @@ try {
                             <p class="m-b-0">Streamings</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-video-camera f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-video-camera f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@ try {
                             <p class="m-b-0">All challenges</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-hashtag f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-hashtag f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@ try {
                             <p class="m-b-0">Categories</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-hashtag f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-hashtag f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@ try {
                             <p class="m-b-0">Stories</p>
                         </div>
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-history f-s-60 <?php echo $default_icon_color;?>"></i></span>
+                            <span><i class="fa fa-history f-s-40 <?php echo $default_icon_color;?>"></i></span>
                         </div>
                     </div>
                 </div>
