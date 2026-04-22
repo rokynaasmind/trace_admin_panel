@@ -7,7 +7,7 @@ use Parse\ParseUser;
 function getDashboardCount(ParseQuery $query)
 {
     try {
-        return (int) $query->count();
+        return (int) $query->count(true);
     } catch (Exception $e) {
         return 0;
     }
@@ -41,7 +41,25 @@ try {
 } catch (Exception $e) {
 }
 
+                                    $currUser = ParseUser::getCurrentUser();
+                                    $cuObjectID = $currUser->getObjectId();
+
+                                    $query = new ParseQuery("_User");
+                                    $query->descending('createdAt');
+                                    $query->limit(10);
+                                    $query->notEqualTo('objectId', $cuObjectID);
+                                    $catArray = $query->find(true);
+
+                                    if (count($catArray) === 0) {
+                                        echo '<tr><td colspan="6" class="text-center text-warning font-weight-bold">No users found</td></tr>';
+                                    }
 ?>
+
+<style>
+    .f-s-60 {
+        font-size: 40px!important;
+    }
+</style>
 
 <div class="page-wrapper">
     <!-- Bread crumb -->
@@ -83,7 +101,7 @@ try {
                 <div class="card p-30">
                     <div class="media">
                         <div class="media-body media-text-left">
-                            <h2 id="total_users" style="min-height: 35px;"><?php echo $totalUsersCount; ?></h2>
+                            <h2 id="total_users" style="min-height: 35px;"><?php echo count($catArray); ?></h2>
                             <p class="m-b-0">Total Users</p>
                         </div>
                         <div class="media-left meida media-middle">
@@ -243,19 +261,6 @@ try {
 
                                 <?php
                                 try {
-
-                                    $currUser = ParseUser::getCurrentUser();
-                                    $cuObjectID = $currUser->getObjectId();
-
-                                    $query = new ParseQuery("_User");
-                                    $query->descending('createdAt');
-                                    $query->limit(10);
-                                    $query->notEqualTo('objectId', $cuObjectID);
-                                    $catArray = $query->find(true);
-
-                                    if (count($catArray) === 0) {
-                                        echo '<tr><td colspan="6" class="text-center text-warning font-weight-bold">No users found</td></tr>';
-                                    }
 
                                     foreach ($catArray as $iValue) {
 
