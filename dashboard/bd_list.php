@@ -112,7 +112,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         include '../admin/header_admin.php';
         include '../admin/left_sidebar_admin.php';
         ?>
-
+<style>
+    .addBDModal label {
+        color: #333;
+    }
+</style>
         <div class="page-wrapper">
             <div class="row page-titles">
                 <div class="col">
@@ -229,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </div>
 
     <!-- Add BD Modal -->
-    <div class="modal fade" id="addBDModal" tabindex="-1" role="dialog" aria-labelledby="addBDModalLabel" aria-hidden="true">
+    <div class="modal fade addBDModal" id="addBDModal" tabindex="-1" role="dialog" aria-labelledby="addBDModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
