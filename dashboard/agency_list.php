@@ -105,6 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
         include '../admin/left_sidebar_admin.php';
         ?>
 
+        <style>
+            .createAgencyModal label {
+                color: #333;
+            }
+        </style>
+
         <div class="page-wrapper">
             <div class="row page-titles">
                 <div class="col">
@@ -229,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     </div>
 
     <!-- Create Agency Modal -->
-    <div class="modal fade" id="createAgencyModal" tabindex="-1" role="dialog" aria-labelledby="createAgencyModalLabel" aria-hidden="true">
+    <div class="modal fade createAgencyModal" id="createAgencyModal" tabindex="-1" role="dialog" aria-labelledby="createAgencyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
