@@ -327,5 +327,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     <script src="../assets/dashboard/js/lib/datatables/buttons.print.min.js"></script>
     <script src="../assets/dashboard/js/lib/datatables/buttons.colVis.min.js"></script>
     <script src="../assets/dashboard/js/lib/datatables/datatables-init.js"></script>
+    <script>
+        (function ($) {
+            'use strict';
+
+            // Ensure stale backdrops never block clicks after a modal closes.
+            $(document).on('hidden.bs.modal', '.modal', function () {
+                $('body').removeClass('modal-open').css('padding-right', '');
+                $('.modal-backdrop').remove();
+            });
+        })(jQuery);
+    </script>
 </body>
 </html>

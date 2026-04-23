@@ -320,6 +320,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <script src="../assets/dashboard/js/lib/datatables/buttons.colVis.min.js"></script>
     <script src="../assets/dashboard/js/lib/datatables/datatables-init.js"></script>
     <script>
+        (function ($) {
+            'use strict';
+
+            // Ensure stale backdrops never block clicks after a modal closes.
+            $(document).on('hidden.bs.modal', '.modal', function () {
+                $('body').removeClass('modal-open').css('padding-right', '');
+                $('.modal-backdrop').remove();
+            });
+        })(jQuery);
+
         function editBD(id, userId, parentAdminUid, remark, status) {
             document.getElementById('edit_bd_id').value = id;
             document.getElementById('edit_user_id').value = userId;
