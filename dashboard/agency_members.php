@@ -10,9 +10,10 @@ use Parse\ParseException;
 session_start();
 
 $currUser = ParseUser::getCurrentUser();
+$currentRole = $currUser ? $currUser->get("role") : null;
 if (!$currUser) {
     header("Refresh:0; url=../index.php");
-} elseif ($currUser->get("role") !== "admin"){
+} elseif (!in_array($currentRole, ["admin", "bd"], true)){
     header("Refresh:0; url=../auth/logout.php");
 }
 

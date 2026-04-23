@@ -12,7 +12,7 @@ $currUser = ParseUser::getCurrentUser();
 if ($currUser) {
 
     try {
-        if ($currUser->get("role") === 'admin') {
+        if (in_array($currUser->get("role"), ['admin', 'bd'], true)) {
             header('Refresh:0; url=../dashboard/panel.php');
         } else {
             header('Refresh:0; url=../auth/logout.php');
@@ -38,7 +38,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
             $user = ParseUser::logIn($username, $password);
 
             $currUser = ParseUser::getCurrentUser();
-            if ($currUser->get("role") === 'admin'){
+            if (in_array($currUser->get("role"), ['admin', 'bd'], true)){
                 { header('Refresh:0; url=../dashboard/panel.php'); }
             } else {
                 { header('Refresh:0; url=../auth/logout.php'); }

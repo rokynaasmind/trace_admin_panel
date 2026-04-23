@@ -1,5 +1,8 @@
 <?php
 
+$sidebarCurrUser = \Parse\ParseUser::getCurrentUser();
+$sidebarRole = $sidebarCurrUser ? $sidebarCurrUser->get('role') : '';
+
 ?>
 
 <div class="left-sidebar">
@@ -19,11 +22,13 @@
                 </li>
 
                 <li>
-                    <a class="has-arrow " href="../dashboard/all_users.php" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Users</span></a>
+                    <a class="has-arrow " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Users</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/all_users.php">All users</a></li>
                         <li><a href="../dashboard/admin_users.php">Admin users</a></li>
+                        <?php if ($sidebarRole === 'admin') { ?>
                         <li><a href="../dashboard/bd_list.php">BD Management</a></li>
+                        <?php } ?>
                         <!--<li><a href="../dashboard/edit_user.php">Edit Profile</a></li> -->
                         <!--<li><a href="../dashboard/video_aproval.php">Video Approval</a></li> -->
                         <!--<li><a href="../dashboard/hangout_aproval.php">Hangout Approval</a></li>-->
@@ -44,15 +49,17 @@
                 </li>
 
                 <li>
-                    <a class="has-arrow " href="../dashboard/agency_list.php" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Agency</span></a>
+                    <a class="has-arrow " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Agency</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/agency_list.php">Agency List</a></li>
                         <li><a href="../dashboard/agency_members.php">Agency Members</a></li>
+                        <?php if ($sidebarRole === 'admin') { ?>
                         <li><a href="../dashboard/agency_applications.php">Applications Review</a></li>
+                        <?php } ?>
                     </ul>
                 </li>
                 <li>
-                    <a class="has-arrow  " href="../dashboard/posts.php" aria-expanded="false"><i class="fa fa-newspaper-o"></i><span class="hide-menu">Posts</span></a>
+                    <a href="../dashboard/posts.php" aria-expanded="false"><i class="fa fa-newspaper-o"></i><span class="hide-menu">Posts</span></a>
                 </li>
 
                 <li>
@@ -96,7 +103,7 @@
                 </li>
 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/gift.php" aria-expanded="false"><i class="fa fa-gift"></i><span class="hide-menu">Gifts</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-gift"></i><span class="hide-menu">Gifts</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/gift.php">All gifts</a></li>
                         <li><a href="../dashboard/add_gift.php">Add new gift</a></li>
@@ -104,7 +111,7 @@
                 </li>
                 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/avatar_frame.php" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Avatar Frame</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Avatar Frame</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/avatar_frame.php">All Avatar Frames</a></li>
                         <li><a href="../dashboard/add_avatar_frame.php">Add new Avatar Frame</a></li>
@@ -112,7 +119,7 @@
                 </li>
                 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/party_theme.php" aria-expanded="false"><i class="fa fa-image"></i><span class="hide-menu">Party Theme</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-image"></i><span class="hide-menu">Party Theme</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/party_theme.php">All Party Themes</a></li>
                         <li><a href="../dashboard/add_party_theme.php">Add new Party Theme</a></li>
@@ -120,7 +127,7 @@
                 </li>
                 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/entrance_effect.php" aria-expanded="false"><i class="fa fa-dashboard"></i><span class="hide-menu">Entrance Effect</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-dashboard"></i><span class="hide-menu">Entrance Effect</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/entrance_effect.php">All Entrance Effects</a></li>
                         <li><a href="../dashboard/add_entrance_effect.php">Add new Entrance Effects</a></li>
@@ -128,7 +135,7 @@
                 </li>
                 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/announcement.php" aria-expanded="false"><i class="fa fa-question"></i><span class="hide-menu">Official Announcement</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-question"></i><span class="hide-menu">Official Announcement</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/announcement.php">All Entrance Announcements</a></li>
                         <li><a href="../dashboard/add_announcement.php">Add new Announcement</a></li>
@@ -137,7 +144,7 @@
     
 
                 <li>
-                    <a class="has-arrow  " href="../dashboard/coin_traders.php" aria-expanded="false"><i class="fa fa-diamond"></i><span class="hide-menu">Coin System</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-diamond"></i><span class="hide-menu">Coin System</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/coin_traders.php">Coin Traders</a></li>
                         <li><a href="../dashboard/coin_plans.php">Coin Plans</a></li>
@@ -153,7 +160,7 @@
                     <a class="has-arrow  " href="../dashboard/payouts.php" aria-expanded="false"><i class="fa fa-credit-card-alt"></i><span class="hide-menu"></span></a>
                 </li> -->
                 <li>
-                    <a class="has-arrow  " href="../dashboard/withdrawals.php" aria-expanded="false"><i class="fa fa-credit-card"></i><span class="hide-menu">Payouts</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-credit-card"></i><span class="hide-menu">Payouts</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/withdrawals.php">All payouts</a></li>
                         <li><a href="../dashboard/pending_withdrawals.php">Pending</a></li>
@@ -168,7 +175,7 @@
 
                 <!-- <li class="nav-label">Advertising</li> <i class="fa fa-credit-card"></i> -->
                 <li>
-                    <a class="has-arrow  " href="../dashboard/withdrawals.php" aria-expanded="false"><i class="fa fa-bullhorn"></i><span class="hide-menu">Advertising</span></a>
+                    <a class="has-arrow  " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-bullhorn"></i><span class="hide-menu">Advertising</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/all_ads.php">My ads</a></li>
                         <li><a href="../dashboard/add_ad.php">Create new Ad</a></li>

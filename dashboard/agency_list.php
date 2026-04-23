@@ -10,9 +10,10 @@ use Parse\ParseException;
 session_start();
 
 $currUser = ParseUser::getCurrentUser();
+$currentRole = $currUser ? $currUser->get("role") : null;
 if (!$currUser) {
     header("Refresh:0; url=../index.php");
-} elseif ($currUser->get("role") !== "admin"){
+} elseif (!in_array($currentRole, ["admin", "bd"], true)){
     header("Refresh:0; url=../auth/logout.php");
 }
 
@@ -68,7 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Handle Delete Agency
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+if (
+    $_SERVER['REQUEST_METHOD'] === 'GET' &&
+    isset($_GET['action']) &&
+    $_GET['action'] === 'delete' &&
+    isset($_GET['id']) &&
+    $currentRole === 'admin'
+) {
     try {
         $query = new ParseQuery("Agency");
         $agency = $query->get($_GET['id'], true);
@@ -208,10 +215,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                                                             <td>' . htmlspecialchars($bdNickname) . '</td>
                                                             <td>' . htmlspecialchars($country) . '</td>
                                                             <td>' . htmlspecialchars($region) . '</td>
-                                                            <td>
+                                                            <td>';
+
+                                                        if ($currentRole === 'admin') {
+                                                            echo '
                                                                 <a href="agency_list.php?action=delete&id=' . $agencyObjId . '" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure?\');">
                                                                     <i class="fa fa-trash"></i> Delete
-                                                                </a>
+                                                                </a>';
+                                                        } else {
+                                                            echo '<span class="badge badge-info">Create/View</span>';
+                                                        }
+
+                                                        echo '
                                                             </td>
                                                         </tr>
                                                         ';
