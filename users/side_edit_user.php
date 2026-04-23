@@ -34,6 +34,7 @@ if(/*isset($_POST['username']) &&*/ isset($_POST['fullname'])){
         $gender = $_POST['gender'];
         $birthday = $_POST['birthday'];
         $isViwer = $_POST['mode'] == 1 ? true : false;
+        $suspensionStatus = isset($_POST['suspension_status']) ? filter_var($_POST['suspension_status'], FILTER_VALIDATE_BOOLEAN) : false;
         // $status = $_POST['status'];
         // $account = $_POST['account'];
         
@@ -60,6 +61,7 @@ if(/*isset($_POST['username']) &&*/ isset($_POST['fullname'])){
         $user->set("gender", $gender);
         $user->set("birthday", $birthdayDate);
         $user->set("isViewer", $isViwer);
+        $user->set("activationStatus", $suspensionStatus);
         // $user->set("emailVerified", filter_var($status, FILTER_VALIDATE_BOOLEAN));
         // $user->set("activationStatus", filter_var($account, FILTER_VALIDATE_BOOLEAN));
         
@@ -222,6 +224,21 @@ if ($accountStatusDisabled == true){
     $status2 = "Suspended";
     $statusDisabled2 = "true";
 
+}*/
+
+// Account status - Suspension
+$accountStatusDisabled = $currUser->get('activationStatus');
+
+if ($accountStatusDisabled == true){
+    $suspensionStatus1 = "Suspended";
+    $suspensionStatusValue1 = "true";
+    $suspensionStatus2 = "Active";
+    $suspensionStatusValue2 = "false";
+} else {
+    $suspensionStatus1 = "Active";
+    $suspensionStatusValue1 = "false";
+    $suspensionStatus2 = "Suspended";
+    $suspensionStatusValue2 = "true";
 }
 
 // status de processo
@@ -265,6 +282,7 @@ $_SESSION['username']     = $username;
 $_SESSION['gender'] = $gender;
 $_SESSION['birthday']     = $birthday;
 $_SESSION['mode']     = $isViwer;
+$_SESSION['suspension_status'] = $accountStatusDisabled;
 // $_SESSION['emailVerified']     = $status;
 // $_SESSION['activationStatus']     = $account;
 
@@ -342,6 +360,16 @@ $_SESSION['mode']     = $isViwer;
                                     <select class="form-control" id="mode" name="mode">
                                         <option value="'.$modeT1.'">'.$mode1.'</option>
                                         <option value="'.$modeT2.'">'.$mode2.'</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="suspension_status">Suspension Status <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="suspension_status" name="suspension_status">
+                                        <option value="'.$suspensionStatusValue1.'">'.$suspensionStatus1.'</option>
+                                        <option value="'.$suspensionStatusValue2.'">'.$suspensionStatus2.'</option>
                                     </select>
                                 </div>
                             </div>

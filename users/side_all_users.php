@@ -78,6 +78,7 @@ function array_get_by_index($index, $array) {
                                     <th style="color:#65131f ;">Gender</th>
                                     <th style="color:#65131f ;">Bithday</th>
                                     <th style="color:#65131f ;">Mode</th>
+                                    <th style="color:#65131f ;">Suspension Status</th>
                                     <th style="color:#65131f ;">Action</th>
                                 </tr>
                                 </thead>
@@ -171,9 +172,9 @@ function array_get_by_index($index, $array) {
 
                                         $activation = $cObj->get('activationStatus');
                                         if ($activation == true){
-                                            $active = "<span class=\"text-warning font-weight-bold\">SUSPENDED</span>";
+                                            $active = "<span class=\"text-danger font-weight-bold\">SUSPENDED</span>";
                                         } else {
-                                            $active = "<span class=\"text-success font-weight-bold\">ENABLED</span>";
+                                            $active = "<span class=\"text-success font-weight-bold\">ACTIVE</span>";
                                         }
                                         
                                         $mode = $cObj->get('isViewer') == false? 'Challenger' : 'Viewer';
@@ -190,6 +191,7 @@ function array_get_by_index($index, $array) {
                                     <td><span>'.$UserGender.'</span></td>
                                     <td><span>'.$birthDate.'</span></td>
                                     <td>'.$mode.'</td>
+                                    <td>'.$active.'</td>
                                     <td><a href="../dashboard/edit_user.php?objectId='.$objectId.'" <span class="badge badge-info" style="background:#5d0375;padding:8;"><i class="fa fa-edit"></i></span></a></td>
                                 </tr>
                                 

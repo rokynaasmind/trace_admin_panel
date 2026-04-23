@@ -23,6 +23,7 @@
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/all_users.php">All users</a></li>
                         <li><a href="../dashboard/admin_users.php">Admin users</a></li>
+                        <li><a href="../dashboard/bd_list.php">BD Management</a></li>
                         <!--<li><a href="../dashboard/edit_user.php">Edit Profile</a></li> -->
                         <!--<li><a href="../dashboard/video_aproval.php">Video Approval</a></li> -->
                         <!--<li><a href="../dashboard/hangout_aproval.php">Hangout Approval</a></li>-->
@@ -40,6 +41,15 @@
                 </li>-->
                 <li>
                     <a  href="../dashboard/messages.php" aria-expanded="false"><i class="fa fa-comments-o"></i><span class="hide-menu">Messages</span></a>
+                </li>
+
+                <li>
+                    <a class="has-arrow " href="../dashboard/agency_list.php" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Agency</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="../dashboard/agency_list.php">Agency List</a></li>
+                        <li><a href="../dashboard/agency_members.php">Agency Members</a></li>
+                        <li><a href="../dashboard/agency_applications.php">Applications Review</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a class="has-arrow  " href="../dashboard/posts.php" aria-expanded="false"><i class="fa fa-newspaper-o"></i><span class="hide-menu">Posts</span></a>
