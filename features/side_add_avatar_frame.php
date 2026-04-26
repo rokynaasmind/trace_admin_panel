@@ -32,6 +32,12 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $credits = $_POST['val-credits'];
         $filePath = $_FILES["val-file"]["tmp_name"] ?? '';
         $fileName = $_FILES['val-file']['name'];
+        $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($fileName, PATHINFO_FILENAME));
+        $safeExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $safeFileName = $safeBaseName ?: 'avatar_frame';
+        if ($safeExtension !== '') {
+            $safeFileName .= '.' . $safeExtension;
+        }
         $isWorking = isset($_POST['val-working']) ? true : false;
         $period =  15;
     
@@ -43,7 +49,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $newGift->set("period", (int)$period);
         $newGift->set("isWorking", $isWorking);
         if ($filePath && $fileName && is_uploaded_file($filePath)) {
-            $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
+            $newGift->set("file", ParseFile::createFromFile($filePath, $safeFileName));
         }
     
         $newGift->save(true);

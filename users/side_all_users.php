@@ -99,6 +99,10 @@ function array_get_by_index($index, $array) {
                                         // Get Parse Object
                                         $cObj = $iValue;
 
+                                        if (($cObj->get('role') ?? '') === 'admin') {
+                                            continue;
+                                        }
+
                                         $objectId = $cObj->getObjectId();
 
                                         $name = $cObj->get('name');

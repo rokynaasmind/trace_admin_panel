@@ -23,6 +23,12 @@ if ($currUser){
 $createAdminError = '';
 $createAdminSuccess = '';
 
+if (!empty($_SESSION['admin_users_flash']) && is_array($_SESSION['admin_users_flash'])) {
+    $createAdminError = $_SESSION['admin_users_flash']['type'] === 'danger' ? ($_SESSION['admin_users_flash']['message'] ?? '') : '';
+    $createAdminSuccess = $_SESSION['admin_users_flash']['type'] === 'success' ? ($_SESSION['admin_users_flash']['message'] ?? '') : '';
+    unset($_SESSION['admin_users_flash']);
+}
+
 if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
     $adminName = trim($_POST['admin_name'] ?? '');
     $adminEmail = trim($_POST['admin_email'] ?? '');

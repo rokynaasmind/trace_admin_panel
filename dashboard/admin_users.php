@@ -17,6 +17,9 @@ use Parse\ParseSessionStorage;
 use Parse\ParseGeoPoint;
 session_start();
 
+$adminUsersFlash = $_SESSION['admin_users_flash'] ?? null;
+unset($_SESSION['admin_users_flash']);
+
 $currUser = ParseUser::getCurrentUser();
 if (!$currUser) {
 
@@ -26,6 +29,61 @@ if (!$currUser) {
     // check if the current user is an admin
     header("Refresh:0; url=../auth/logout.php");
 
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_admin') {
+    $adminName = trim($_POST['admin_name'] ?? '');
+    $adminEmail = trim($_POST['admin_email'] ?? '');
+    $adminUsername = trim($_POST['admin_username'] ?? '');
+    $adminPassword = trim($_POST['admin_password'] ?? '');
+    $adminGender = trim($_POST['admin_gender'] ?? 'OTH');
+
+    if ($adminName === '' || $adminEmail === '' || $adminUsername === '' || $adminPassword === '') {
+        $_SESSION['admin_users_flash'] = ['type' => 'danger', 'message' => 'All fields are required to create an admin user.'];
+    } elseif (strlen($adminPassword) < 6) {
+        $_SESSION['admin_users_flash'] = ['type' => 'danger', 'message' => 'Password must be at least 6 characters.'];
+    } else {
+        try {
+            $checkUsername = new ParseQuery("_User");
+            $checkUsername->equalTo('username', $adminUsername);
+            $checkUsername->limit(1);
+            $usernameExists = count($checkUsername->find(true)) > 0;
+
+            $checkEmail = new ParseQuery("_User");
+            $checkEmail->equalTo('email', $adminEmail);
+            $checkEmail->limit(1);
+            $emailExists = count($checkEmail->find(true)) > 0;
+
+            if ($usernameExists) {
+                $_SESSION['admin_users_flash'] = ['type' => 'danger', 'message' => 'Username already exists. Please choose another one.'];
+            } elseif ($emailExists) {
+                $_SESSION['admin_users_flash'] = ['type' => 'danger', 'message' => 'Email already exists. Please use another email.'];
+            } else {
+                $sessionToken = $currUser->getSessionToken();
+
+                $newAdmin = new ParseUser();
+                $newAdmin->set('name', $adminName);
+                $newAdmin->setUsername($adminUsername);
+                $newAdmin->setEmail($adminEmail);
+                $newAdmin->setPassword($adminPassword);
+                $newAdmin->set('gender', in_array($adminGender, ['MAL', 'FML', 'OTH']) ? $adminGender : 'OTH');
+                $newAdmin->set('role', 'admin');
+                $newAdmin->set('isViewer', false);
+                $newAdmin->signUp(true);
+
+                ParseUser::logOut();
+                ParseUser::become($sessionToken, true);
+                $_SESSION['token'] = $sessionToken;
+
+                $_SESSION['admin_users_flash'] = ['type' => 'success', 'message' => 'Admin user created successfully and is now visible in the list.'];
+            }
+        } catch (ParseException $e) {
+            $_SESSION['admin_users_flash'] = ['type' => 'danger', 'message' => $e->getMessage()];
+        }
+    }
+
+    header('Location: admin_users.php');
+    exit;
 }
 
 
