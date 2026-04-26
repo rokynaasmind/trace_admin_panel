@@ -1,109 +1,19 @@
 <?php
 
-require '../vendor/autoload.php';
-include '../Configs.php';
-
 use Parse\ParseException;
 use Parse\ParseQuery;
 use Parse\ParseUser;
 
-
-session_start();
-
-$currUser = ParseUser::getCurrentUser();
-if ($currUser){
-
-    // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
-} else {
-
-    header("Refresh:0; url=../index.php");
-}
-
 $createAdminError = '';
 $createAdminSuccess = '';
 
-if (!empty($_SESSION['admin_users_flash']) && is_array($_SESSION['admin_users_flash'])) {
-    $createAdminError = $_SESSION['admin_users_flash']['type'] === 'danger' ? ($_SESSION['admin_users_flash']['message'] ?? '') : '';
-    $createAdminSuccess = $_SESSION['admin_users_flash']['type'] === 'success' ? ($_SESSION['admin_users_flash']['message'] ?? '') : '';
-    unset($_SESSION['admin_users_flash']);
+if (!empty($adminUsersFlash) && is_array($adminUsersFlash)) {
+    $createAdminError = ($adminUsersFlash['type'] ?? '') === 'danger' ? ($adminUsersFlash['message'] ?? '') : '';
+    $createAdminSuccess = ($adminUsersFlash['type'] ?? '') === 'success' ? ($adminUsersFlash['message'] ?? '') : '';
 }
 
-if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
-    $adminName = trim($_POST['admin_name'] ?? '');
-    $adminEmail = trim($_POST['admin_email'] ?? '');
-    $adminUsername = trim($_POST['admin_username'] ?? '');
-    $adminPassword = trim($_POST['admin_password'] ?? '');
-    $adminGender = trim($_POST['admin_gender'] ?? 'OTH');
-
-    if ($adminName === '' || $adminEmail === '' || $adminUsername === '' || $adminPassword === '') {
-        $createAdminError = 'All fields are required to create an admin user.';
-    } elseif (strlen($adminPassword) < 6) {
-        $createAdminError = 'Password must be at least 6 characters.';
-    } else {
-        try {
-            $checkUsername = new ParseQuery("_User");
-            $checkUsername->equalTo('username', $adminUsername);
-            $checkUsername->limit(1);
-            $usernameExists = count($checkUsername->find(true)) > 0;
-
-            $checkEmail = new ParseQuery("_User");
-            $checkEmail->equalTo('email', $adminEmail);
-            $checkEmail->limit(1);
-            $emailExists = count($checkEmail->find(true)) > 0;
-
-            if ($usernameExists) {
-                $createAdminError = 'Username already exists. Please choose another one.';
-            } elseif ($emailExists) {
-                $createAdminError = 'Email already exists. Please use another email.';
-            } else {
-                $sessionToken = $currUser->getSessionToken();
-
-                $newAdmin = new ParseUser();
-                $newAdmin->set('name', $adminName);
-                $newAdmin->setUsername($adminUsername);
-                $newAdmin->setEmail($adminEmail);
-                $newAdmin->setPassword($adminPassword);
-                $newAdmin->set('gender', in_array($adminGender, ['MAL', 'FML', 'OTH']) ? $adminGender : 'OTH');
-                $newAdmin->set('role', 'admin');
-                $newAdmin->set('isViewer', false);
-                $newAdmin->signUp(true);
-
-                // signUp changes current user in Parse SDK, so restore the admin session.
-                ParseUser::logOut();
-                ParseUser::become($sessionToken, true);
-                $_SESSION['token'] = $sessionToken;
-
-                $createAdminSuccess = 'Admin user created successfully and is now visible in the list.';
-            }
-        } catch (ParseException $e) {
-            $createAdminError = $e->getMessage();
-        }
-    }
-}
-
-if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
-    $adminId = trim($_POST['admin_id'] ?? '');
-
-    if ($adminId === '') {
-        $createAdminError = 'Invalid admin selected for deletion.';
-    } else {
-        try {
-            $query = new ParseQuery("_User");
-            $targetAdmin = $query->get($adminId, true);
-            $isSuperAdmin = ($targetAdmin->get('isSuperAdmin') ?? false) === true;
-
-            if ($adminId === $currUser->getObjectId() || $isSuperAdmin) {
-                $createAdminError = 'This admin user cannot be deleted.';
-            } else {
-                $targetAdmin->destroy(true);
-                $createAdminSuccess = 'Admin user deleted successfully.';
-            }
-        } catch (ParseException $e) {
-            $createAdminError = $e->getMessage();
-        }
-    }
-}
+$currUser = ParseUser::getCurrentUser();
+$cuObjectID = $currUser ? $currUser->getObjectId() : '';
 
 ?>
 
@@ -187,6 +97,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
                                 </select>
                             </div>
 
+                            <div class="form-group">
+                                <label for="admin_mode">Mode</label>
+                                <select id="admin_mode" name="admin_mode" class="form-control">
+                                    <option value="0">Challenger</option>
+                                    <option value="1">Viewer</option>
+                                </select>
+                            </div>
+
                             <button type="submit" class="btn btn-primary">Create Admin</button>
                         </form>
                     </div>
@@ -200,6 +118,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
                                     <th style="color:#65131f ;">ObjectId</th>
                                     <th style="color:#65131f ;">Name</th>
                                     <th style="color:#65131f ;">Username</th>
+                                    <th style="color:#65131f ;">Email</th>
                                     <th style="color:#65131f ;">Avatar</th>
                                     <th style="color:#65131f ;">Gender</th>
                                     <th style="color:#65131f ;">Bithday</th>
@@ -212,9 +131,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
 
                                 <?php
                                 try {
-
-                                    $currUser = ParseUser::getCurrentUser();
-                                    $cuObjectID = $currUser->getObjectId();
 
                                     $query = new ParseQuery("_User");
                                     $query->descending('createdAt');
@@ -276,16 +192,37 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
                                             $city_location = "<span class=\"text-info font-weight-bold\">$locaton</span>";
                                         }
                                         
-                                        $mode = $cObj->get('isViewer') == false? 'Challenger' : 'Viewer';
+                                        $mode = $cObj->get('isViewer') == false ? 'Challenger' : 'Viewer';
                                         $isProtected = $cObj->getObjectId() === $cuObjectID || ($cObj->get('isSuperAdmin') ?? false) === true;
-                                        $editLink = '<a href="../dashboard/edit_user.php?objectId=' . urlencode($objectId) . '" class="btn btn-sm btn-warning mr-1"><i class="fa fa-edit"></i> Edit</a>';
+
+                                        $safeObjectId = htmlspecialchars($objectId, ENT_QUOTES, 'UTF-8');
+                                        $safeName = htmlspecialchars((string) $name, ENT_QUOTES, 'UTF-8');
+                                        $safeUsername = htmlspecialchars((string) $username, ENT_QUOTES, 'UTF-8');
+                                        $safeEmail = htmlspecialchars((string) $email, ENT_QUOTES, 'UTF-8');
+                                        $genderValue = in_array($gender, ['MAL', 'FML', 'OTH'], true) ? $gender : 'OTH';
+                                        $safeGender = htmlspecialchars((string) $genderValue, ENT_QUOTES, 'UTF-8');
+                                        $modeValue = $cObj->get('isViewer') == true ? '1' : '0';
+
+                                        if ($isProtected) {
+                                            $editLink = '<span class="badge badge-secondary mr-1">Protected</span>';
+                                        } else {
+                                            $editLink = '<button type="button" class="btn btn-sm btn-warning mr-1" '
+                                                . 'data-admin-id="' . $safeObjectId . '" '
+                                                . 'data-admin-name="' . $safeName . '" '
+                                                . 'data-admin-username="' . $safeUsername . '" '
+                                                . 'data-admin-email="' . $safeEmail . '" '
+                                                . 'data-admin-gender="' . $safeGender . '" '
+                                                . 'data-admin-mode="' . $modeValue . '" '
+                                                . 'onclick="openEditAdminModal(this)"><i class="fa fa-edit"></i> Edit</button>';
+                                        }
+
                                         $deleteAction = '';
                                         if ($isProtected) {
-                                            $deleteAction = '<span class="badge badge-secondary">Protected</span>';
+                                            $deleteAction = '';
                                         } else {
                                             $deleteAction = '<form method="post" action="" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this admin user?\')">'
                                                 . '<input type="hidden" name="action" value="delete_admin">'
-                                                . '<input type="hidden" name="admin_id" value="' . htmlspecialchars($objectId, ENT_QUOTES, 'UTF-8') . '">'
+                                                . '<input type="hidden" name="admin_id" value="' . $safeObjectId . '">'
                                                 . '<button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button>'
                                                 . '</form>';
                                         }
@@ -294,9 +231,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$name.'</td>
-                                    <td>'.$username.'</td>
+                                            <td>'.$safeObjectId.'</td>
+                                            <td>'.$safeName.'</td>
+                                            <td>'.$safeUsername.'</td>
+                                            <td>'.$safeEmail.'</td>
                                     <td>'.$avatar.'</td>
                                     <td><span>'.$UserGender.'</span></td>
                                     <td><span>'.$birthDate.'</span></td>
@@ -329,6 +267,68 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
     <!-- End footer -->
 </div>
 
+<div class="modal fade" id="editAdminModal" tabindex="-1" role="dialog" aria-labelledby="editAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" action="">
+                <input type="hidden" name="action" value="update_admin">
+                <input type="hidden" id="edit_admin_id" name="admin_id" value="">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAdminModalLabel">Edit Admin User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_admin_name">Name</label>
+                        <input type="text" id="edit_admin_name" name="admin_name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_admin_email">Email</label>
+                        <input type="email" id="edit_admin_email" name="admin_email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_admin_username">Username</label>
+                        <input type="text" id="edit_admin_username" name="admin_username" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_admin_password">Password (optional)</label>
+                        <input type="password" id="edit_admin_password" name="admin_password" class="form-control" minlength="6" placeholder="Leave blank to keep current password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_admin_gender">Gender</label>
+                        <select id="edit_admin_gender" name="admin_gender" class="form-control">
+                            <option value="OTH">Other</option>
+                            <option value="MAL">Male</option>
+                            <option value="FML">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_admin_mode">Mode</label>
+                        <select id="edit_admin_mode" name="admin_mode" class="form-control">
+                            <option value="0">Challenger</option>
+                            <option value="1">Viewer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 function toggleCreateAdminPanel(forceShow) {
     var panel = document.getElementById('createAdminPanel');
@@ -337,5 +337,19 @@ function toggleCreateAdminPanel(forceShow) {
     }
     var shouldShow = typeof forceShow === 'boolean' ? forceShow : panel.style.display === 'none' || panel.style.display === '';
     panel.style.display = shouldShow ? 'block' : 'none';
+}
+
+function openEditAdminModal(button) {
+    document.getElementById('edit_admin_id').value = button.getAttribute('data-admin-id') || '';
+    document.getElementById('edit_admin_name').value = button.getAttribute('data-admin-name') || '';
+    document.getElementById('edit_admin_username').value = button.getAttribute('data-admin-username') || '';
+    document.getElementById('edit_admin_email').value = button.getAttribute('data-admin-email') || '';
+    document.getElementById('edit_admin_gender').value = button.getAttribute('data-admin-gender') || 'OTH';
+    document.getElementById('edit_admin_mode').value = button.getAttribute('data-admin-mode') || '0';
+    document.getElementById('edit_admin_password').value = '';
+
+    if (window.jQuery && window.jQuery('#editAdminModal').modal) {
+        window.jQuery('#editAdminModal').modal('show');
+    }
 }
 </script>

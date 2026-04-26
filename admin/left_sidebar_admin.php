@@ -2,6 +2,7 @@
 
 $sidebarCurrUser = \Parse\ParseUser::getCurrentUser();
 $sidebarRole = $sidebarCurrUser ? $sidebarCurrUser->get('role') : '';
+$sidebarIsSuperAdmin = $sidebarCurrUser ? (($sidebarCurrUser->get('isSuperAdmin') ?? false) === true) : false;
 
 ?>
 
@@ -25,7 +26,9 @@ $sidebarRole = $sidebarCurrUser ? $sidebarCurrUser->get('role') : '';
                     <a class="has-arrow " href="javascript:void(0)" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Users</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/all_users.php">All users</a></li>
+                        <?php if ($sidebarIsSuperAdmin) { ?>
                         <li><a href="../dashboard/admin_users.php">Admin users</a></li>
+                        <?php } ?>
                         <?php if ($sidebarRole === 'admin') { ?>
                         <li><a href="../dashboard/bd_list.php">BD Management</a></li>
                         <?php } ?>
