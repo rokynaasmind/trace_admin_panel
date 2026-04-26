@@ -41,7 +41,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($fileName, PATHINFO_FILENAME));
         $safeExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowedExtensions = ['png', 'jpg', 'jpeg'];
-        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/pjpeg'];
+        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/jpg', 'image/jfif'];
 
         if ($name === '' || $credits <= 0) {
             $createAvatarFrameError = 'Please provide a valid name and credits amount.';
@@ -55,6 +55,14 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                 if ($finfo !== false) {
                     $detectedMimeType = (string) finfo_file($finfo, $filePath);
                     finfo_close($finfo);
+                }
+            }
+
+            // Fallback for environments where finfo returns a generic MIME for JPG.
+            if (($detectedMimeType === '' || $detectedMimeType === 'application/octet-stream') && function_exists('getimagesize')) {
+                $imageInfo = @getimagesize($filePath);
+                if (is_array($imageInfo) && !empty($imageInfo['mime'])) {
+                    $detectedMimeType = (string) $imageInfo['mime'];
                 }
             }
 
