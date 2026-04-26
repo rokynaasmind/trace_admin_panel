@@ -102,7 +102,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                <div class="card">
                     <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
                         <h4 class="m-0">Admin Users</h4>
-                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createAdminModal">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="toggleCreateAdminPanel()">
                             <i class="fa fa-plus"></i> Create Admin
                         </button>
                     </div>
@@ -114,6 +114,47 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                     <?php if (!empty($createAdminSuccess)): ?>
                         <div class="alert alert-success m-3 mb-0"><?php echo htmlspecialchars($createAdminSuccess); ?></div>
                     <?php endif; ?>
+
+                    <div id="createAdminPanel" class="m-3 p-3 border rounded" style="display:none; background:#fafafa;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="m-0">Create Admin User</h5>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleCreateAdminPanel(false)">Close</button>
+                        </div>
+                        <form method="post" action="">
+                            <input type="hidden" name="action" value="create_admin">
+
+                            <div class="form-group">
+                                <label for="admin_name">Name</label>
+                                <input type="text" id="admin_name" name="admin_name" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admin_email">Email</label>
+                                <input type="email" id="admin_email" name="admin_email" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admin_username">Username</label>
+                                <input type="text" id="admin_username" name="admin_username" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admin_password">Password</label>
+                                <input type="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admin_gender">Gender</label>
+                                <select id="admin_gender" name="admin_gender" class="form-control">
+                                    <option value="OTH">Other</option>
+                                    <option value="MAL">Male</option>
+                                    <option value="FML">Female</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Create Admin</button>
+                        </form>
+                    </div>
 
                     <!--<h5 class="card-subtitle">Copy or Export CSV, Excel, PDF and Print data</h5> -->
                     <div class="card-body">
@@ -236,56 +277,16 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
     <!-- End Container fluid  -->
     <!-- footer -->
 
-    <div class="modal fade" id="createAdminModal" tabindex="-1" role="dialog" aria-labelledby="createAdminModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createAdminModalLabel">Create Admin User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="post" action="">
-                    <div class="modal-body">
-                        <input type="hidden" name="action" value="create_admin">
-
-                        <div class="form-group">
-                            <label for="admin_name">Name</label>
-                            <input type="text" id="admin_name" name="admin_name" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="admin_email">Email</label>
-                            <input type="email" id="admin_email" name="admin_email" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="admin_username">Username</label>
-                            <input type="text" id="admin_username" name="admin_username" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="admin_password">Password</label>
-                            <input type="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="admin_gender">Gender</label>
-                            <select id="admin_gender" name="admin_gender" class="form-control">
-                                <option value="OTH">Other</option>
-                                <option value="MAL">Male</option>
-                                <option value="FML">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Admin</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- End footer -->
 </div>
+
+<script>
+function toggleCreateAdminPanel(forceShow) {
+    var panel = document.getElementById('createAdminPanel');
+    if (!panel) {
+        return;
+    }
+    var shouldShow = typeof forceShow === 'boolean' ? forceShow : panel.style.display === 'none' || panel.style.display === '';
+    panel.style.display = shouldShow ? 'block' : 'none';
+}
+</script>

@@ -33,7 +33,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $name = $_POST['val-name'];
         $category = $_POST['val-category'];
         $credits = $_POST['val-credits'];
-        $filePath = realpath($_FILES["val-file"]["tmp_name"]);
+        $filePath = $_FILES["val-file"]["tmp_name"] ?? '';
         $fileName = $_FILES['val-file']['name'];
     
         $newGift = ParseObject::create("Gifts");
@@ -41,7 +41,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $newGift->set("name", $name);
         $newGift->set("categories",$category);
         $newGift->set("coins", (int)$credits);
-        if ($filePath && $fileName) {
+        if ($filePath && $fileName && is_uploaded_file($filePath)) {
             $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
         }
     

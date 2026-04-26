@@ -30,7 +30,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
     }else{
         $name = $_POST['val-name'];
         $credits = $_POST['val-credits'];
-        $filePath = realpath($_FILES["val-file"]["tmp_name"]);
+        $filePath = $_FILES["val-file"]["tmp_name"] ?? '';
         $fileName = $_FILES['val-file']['name'];
         $isWorking = isset($_POST['val-working']) ? true : false;
         $period =  15;
@@ -42,7 +42,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $newGift->set("coins", (int)$credits);
         $newGift->set("period", (int)$period);
         $newGift->set("isWorking", $isWorking);
-        if ($filePath && $fileName) {
+        if ($filePath && $fileName && is_uploaded_file($filePath)) {
             $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
         }
     
