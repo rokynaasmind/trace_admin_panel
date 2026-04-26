@@ -18,6 +18,10 @@ if ($currUser){
     header("Refresh:0; url=../index.php");
 }
 
+function normalize_user_role($role) {
+    return strtolower(trim((string) ($role ?? '')));
+}
+
 function array_get_by_index($index, $array) {
 
     $i=0;
@@ -99,7 +103,7 @@ function array_get_by_index($index, $array) {
                                         // Get Parse Object
                                         $cObj = $iValue;
 
-                                        if (($cObj->get('role') ?? '') === 'admin') {
+                                        if (normalize_user_role($cObj->get('role')) === 'admin') {
                                             continue;
                                         }
 

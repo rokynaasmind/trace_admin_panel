@@ -15,6 +15,11 @@ if (!empty($adminUsersFlash) && is_array($adminUsersFlash)) {
 $currUser = ParseUser::getCurrentUser();
 $cuObjectID = $currUser ? $currUser->getObjectId() : '';
 
+function normalize_user_role($role): string
+{
+    return strtolower(trim((string) ($role ?? '')));
+}
+
 ?>
 
 <style>
@@ -134,12 +139,16 @@ $cuObjectID = $currUser ? $currUser->getObjectId() : '';
 
                                     $query = new ParseQuery("_User");
                                     $query->descending('createdAt');
-                                    $query->equalTo('role', 'admin');
-                                    $catArray = $query->find(false);
+                                    $query->limit(1500);
+                                    $catArray = $query->find(true);
 
                                     foreach ($catArray as $iValue) {
                                         // Get Parse Object
                                         $cObj = $iValue;
+
+                                        if (normalize_user_role($cObj->get('role')) !== 'admin') {
+                                            continue;
+                                        }
 
                                         $objectId = $cObj->getObjectId();
 
