@@ -32,6 +32,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $credits = $_POST['val-credits'];
         $filePath = realpath($_FILES["val-file"]["tmp_name"]);
         $fileName = $_FILES['val-file']['name'];
+        $isWorking = isset($_POST['val-working']) ? true : false;
         $period =  15;
     
         $newGift = ParseObject::create("Gifts");
@@ -40,7 +41,10 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $newGift->set("categories","avatar_frame");
         $newGift->set("coins", (int)$credits);
         $newGift->set("period", (int)$period);
-        $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
+        $newGift->set("isWorking", $isWorking);
+        if ($filePath && $fileName) {
+            $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
+        }
     
         $newGift->save(true);
     }
@@ -86,6 +90,14 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                             <div class="col-sm-8">
                                 <input type="number" class="form-control" id="val-credits" name="val-credits" placeholder="Credits needed to send the gift" required>
                                 <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-working" class="col-sm-4 col-form-label">Working</label>
+                            <div class="col-sm-8" style="padding-top: 8px;">
+                                <input id="val-working" name="val-working" type="checkbox" checked>
+                                <span style="margin-left:8px;">Enable this frame</span>
                             </div>
                         </div>
 

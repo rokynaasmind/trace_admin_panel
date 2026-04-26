@@ -28,33 +28,41 @@ if (isset($_POST['action']) && $_POST['action'] === 'approve_request') {
             $query->includeKey("plan");
             $request = $query->get($requestId, true);
 
-            $coinAmount = $request->get("coinAmount") ?? 0;
-            $trader = $request->get("trader");
-            $user = $request->get("user");
+            $currentStatus = $request->get("status") ?? 'pending';
+            if ($currentStatus !== 'pending') {
+                $errorMsg = "This request is already " . $currentStatus . ".";
+            } else {
+                $coinAmount = $request->get("coinAmount") ?? 0;
+                $trader = $request->get("trader");
+                $user = $request->get("user");
 
-            if ($trader && $user && $coinAmount > 0) {
-                $traderBalance = $trader->get("coinBalance") ?? 0;
+                if ($trader && $user && $coinAmount > 0) {
+                    $traderBalance = $trader->get("coinBalance") ?? 0;
 
-                if ($traderBalance >= $coinAmount) {
-                    // Deduct from trader
-                    $trader->set("coinBalance", $traderBalance - $coinAmount);
-                    $trader->set("spentCoins", ($trader->get("spentCoins") ?? 0) + $coinAmount);
-                    $trader->save(true);
+                    if ($traderBalance >= $coinAmount) {
+                        // Deduct from trader
+                        $trader->set("coinBalance", $traderBalance - $coinAmount);
+                        $trader->set("spentCoins", ($trader->get("spentCoins") ?? 0) + $coinAmount);
+                        $trader->save(true);
 
-                    // Add coins to user
-                    $userObj = $request->get("user");
-                    $userCoins = $userObj->get("coins") ?? 0;
-                    $userObj->set("coins", $userCoins + $coinAmount);
-                    $userObj->save(true);
+                        // Add coins to user
+                        $userObj = $request->get("user");
+                        $userCoins = $userObj->get("coins") ?? 0;
+                        $userObj->set("coins", $userCoins + $coinAmount);
+                        $userObj->save(true);
 
-                    // Update request status
-                    $request->set("status", "approved");
-                    $request->set("approvedAt", new DateTime());
-                    $request->save(true);
+                        // Update request status
+                        $request->set("status", "approved");
+                        $request->set("approvedAt", new DateTime());
+                        $request->set("approvedBy", $currUser);
+                        $request->save(true);
 
-                    $successMsg = "Request approved! " . number_format($coinAmount) . " coins transferred to user.";
+                        $successMsg = "Request approved! " . number_format($coinAmount) . " coins transferred to user.";
+                    } else {
+                        $errorMsg = "Trader does not have enough coins. Balance: " . number_format($traderBalance);
+                    }
                 } else {
-                    $errorMsg = "Trader does not have enough coins. Balance: " . number_format($traderBalance);
+                    $errorMsg = "Invalid request data. Unable to approve this request.";
                 }
             }
         } catch (ParseException $e) {
@@ -70,9 +78,16 @@ if (isset($_POST['action']) && $_POST['action'] === 'reject_request') {
         try {
             $query = new ParseQuery("CoinRequests");
             $request = $query->get($requestId, true);
-            $request->set("status", "rejected");
-            $request->save(true);
-            $successMsg = "Request has been rejected.";
+            $currentStatus = $request->get("status") ?? 'pending';
+            if ($currentStatus !== 'pending') {
+                $errorMsg = "This request is already " . $currentStatus . ".";
+            } else {
+                $request->set("status", "rejected");
+                $request->set("rejectedAt", new DateTime());
+                $request->set("rejectedBy", $currUser);
+                $request->save(true);
+                $successMsg = "Request has been rejected.";
+            }
         } catch (ParseException $e) {
             $errorMsg = $e->getMessage();
         }
@@ -205,15 +220,15 @@ $filterTraderId = $_GET['trader_id'] ?? '';
                                     if ($filterStatus !== 'all') {
                                         $query->equalTo("status", $filterStatus);
                                     }
-                                    if ($filterTraderId) {
-                                        $traderPointer = ParseObject::create("CoinTraders");
-                                        $traderPointer->setObjectId($filterTraderId);
-                                        $query->equalTo("trader", $traderPointer);
-                                    }
 
                                     $requests = $query->find(true);
 
                                     foreach ($requests as $req) {
+                                        $traderObj = $req->get("trader");
+                                        if ($filterTraderId && (!$traderObj || $traderObj->getObjectId() !== $filterTraderId)) {
+                                            continue;
+                                        }
+
                                         $reqId = $req->getObjectId();
 
                                         // Requester (user)
@@ -231,7 +246,6 @@ $filterTraderId = $_GET['trader_id'] ?? '';
                                         }
 
                                         // Trader
-                                        $traderObj = $req->get("trader");
                                         $traderUser = null;
                                         $traderName = 'Unknown';
                                         $traderHandle = '';

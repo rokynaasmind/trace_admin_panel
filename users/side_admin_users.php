@@ -20,6 +20,62 @@ if ($currUser){
     header("Refresh:0; url=../index.php");
 }
 
+$createAdminError = '';
+$createAdminSuccess = '';
+
+if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
+    $adminName = trim($_POST['admin_name'] ?? '');
+    $adminEmail = trim($_POST['admin_email'] ?? '');
+    $adminUsername = trim($_POST['admin_username'] ?? '');
+    $adminPassword = trim($_POST['admin_password'] ?? '');
+    $adminGender = trim($_POST['admin_gender'] ?? 'OTH');
+
+    if ($adminName === '' || $adminEmail === '' || $adminUsername === '' || $adminPassword === '') {
+        $createAdminError = 'All fields are required to create an admin user.';
+    } elseif (strlen($adminPassword) < 6) {
+        $createAdminError = 'Password must be at least 6 characters.';
+    } else {
+        try {
+            $checkUsername = new ParseQuery("_User");
+            $checkUsername->equalTo('username', $adminUsername);
+            $checkUsername->limit(1);
+            $usernameExists = count($checkUsername->find(true)) > 0;
+
+            $checkEmail = new ParseQuery("_User");
+            $checkEmail->equalTo('email', $adminEmail);
+            $checkEmail->limit(1);
+            $emailExists = count($checkEmail->find(true)) > 0;
+
+            if ($usernameExists) {
+                $createAdminError = 'Username already exists. Please choose another one.';
+            } elseif ($emailExists) {
+                $createAdminError = 'Email already exists. Please use another email.';
+            } else {
+                $sessionToken = $currUser->getSessionToken();
+
+                $newAdmin = new ParseUser();
+                $newAdmin->set('name', $adminName);
+                $newAdmin->setUsername($adminUsername);
+                $newAdmin->setEmail($adminEmail);
+                $newAdmin->setPassword($adminPassword);
+                $newAdmin->set('gender', in_array($adminGender, ['MAL', 'FML', 'OTH']) ? $adminGender : 'OTH');
+                $newAdmin->set('role', 'admin');
+                $newAdmin->set('isViewer', false);
+                $newAdmin->signUp(true);
+
+                // signUp changes current user in Parse SDK, so restore the admin session.
+                ParseUser::logOut();
+                ParseUser::become($sessionToken, true);
+                $_SESSION['token'] = $sessionToken;
+
+                $createAdminSuccess = 'Admin user created successfully and is now visible in the list.';
+            }
+        } catch (ParseException $e) {
+            $createAdminError = $e->getMessage();
+        }
+    }
+}
+
 ?>
 
 <div class="page-wrapper">
@@ -44,6 +100,21 @@ if ($currUser){
         <div class="row">
             <div class="col-lg">
                <div class="card">
+                    <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 class="m-0">Admin Users</h4>
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createAdminModal">
+                            <i class="fa fa-plus"></i> Create Admin
+                        </button>
+                    </div>
+
+                    <?php if (!empty($createAdminError)): ?>
+                        <div class="alert alert-danger m-3 mb-0"><?php echo htmlspecialchars($createAdminError); ?></div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($createAdminSuccess)): ?>
+                        <div class="alert alert-success m-3 mb-0"><?php echo htmlspecialchars($createAdminSuccess); ?></div>
+                    <?php endif; ?>
+
                     <!--<h5 class="card-subtitle">Copy or Export CSV, Excel, PDF and Print data</h5> -->
                     <div class="card-body">
                         <div class="table-responsive">
@@ -164,6 +235,57 @@ if ($currUser){
     </div>
     <!-- End Container fluid  -->
     <!-- footer -->
+
+    <div class="modal fade" id="createAdminModal" tabindex="-1" role="dialog" aria-labelledby="createAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createAdminModalLabel">Create Admin User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="">
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="create_admin">
+
+                        <div class="form-group">
+                            <label for="admin_name">Name</label>
+                            <input type="text" id="admin_name" name="admin_name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin_email">Email</label>
+                            <input type="email" id="admin_email" name="admin_email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin_username">Username</label>
+                            <input type="text" id="admin_username" name="admin_username" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin_password">Password</label>
+                            <input type="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin_gender">Gender</label>
+                            <select id="admin_gender" name="admin_gender" class="form-control">
+                                <option value="OTH">Other</option>
+                                <option value="MAL">Male</option>
+                                <option value="FML">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- End footer -->
 </div>

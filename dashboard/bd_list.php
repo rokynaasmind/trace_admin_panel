@@ -322,7 +322,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <script>
         (function ($) {
             'use strict';
-
             // Ensure stale backdrops never block clicks after a modal closes.
             $(document).on('hidden.bs.modal', '.modal', function () {
                 $('body').removeClass('modal-open').css('padding-right', '');

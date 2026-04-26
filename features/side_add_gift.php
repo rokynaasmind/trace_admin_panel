@@ -10,7 +10,7 @@ use Parse\ParseUser;
 
 session_start();
 
-$categories = ['love','moods','artists','collectibles','games','family','classic','3d','vip'];
+$categories = ['love','moods','artists','collectibles','games','family','classic','3d','vip','country','festival','trending'];
 
 $currUser = ParseUser::getCurrentUser();
 if ($currUser){
@@ -41,7 +41,9 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $newGift->set("name", $name);
         $newGift->set("categories",$category);
         $newGift->set("coins", (int)$credits);
-        $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
+        if ($filePath && $fileName) {
+            $newGift->set("file", ParseFile::createFromFile($filePath, $fileName));
+        }
     
         $newGift->save(true);
         
@@ -105,10 +107,10 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                         </div>
 
                             <div class="form-group row">
-                                <label for="val-file" class="col-sm-4 col-form-label">Lottie JSON file<span class="text-danger">*</span></label>
+                                <label for="val-file" class="col-sm-4 col-form-label">Gift File / Photo<span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
-                                    <input id="val-file" name="val-file" type="file" accept="application/json" required />
-                                    <div class="invalid-feedback">Please choose your Gift file, in JSON format</div>
+                                    <input id="val-file" name="val-file" type="file" accept="application/json,image/png,image/jpeg,image/webp,image/gif" required />
+                                    <div class="invalid-feedback">Please choose a JSON or image file for this gift.</div>
                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
