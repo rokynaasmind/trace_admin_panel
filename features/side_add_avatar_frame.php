@@ -41,7 +41,7 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($fileName, PATHINFO_FILENAME));
         $safeExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowedExtensions = ['png', 'jpg', 'jpeg'];
-        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/jpg', 'image/jfif'];
+        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/jpg', 'image/jfif', 'image/x-png', 'image/x-jpeg'];
 
         if ($name === '' || $credits <= 0) {
             $createAvatarFrameError = 'Please provide a valid name and credits amount.';
@@ -50,6 +50,22 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         } elseif (!in_array($safeExtension, $allowedExtensions, true)) {
             $createAvatarFrameError = 'Invalid file extension. Only PNG and JPG files are allowed.';
         } else {
+            $imageType = 0;
+
+            if (function_exists('exif_imagetype')) {
+                $imageType = (int) @exif_imagetype($filePath);
+            }
+
+            if ($imageType === 0 && function_exists('getimagesize')) {
+                $imageInfo = @getimagesize($filePath);
+                if (is_array($imageInfo)) {
+                    $imageType = (int) ($imageInfo[2] ?? 0);
+                    if (!empty($imageInfo['mime'])) {
+                        $detectedMimeType = (string) $imageInfo['mime'];
+                    }
+                }
+            }
+
             if (function_exists('finfo_open')) {
                 $finfo = finfo_open(FILEINFO_MIME_TYPE);
                 if ($finfo !== false) {
@@ -58,19 +74,15 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                 }
             }
 
-            // Fallback for environments where finfo returns a generic MIME for JPG.
-            if (($detectedMimeType === '' || $detectedMimeType === 'application/octet-stream') && function_exists('getimagesize')) {
-                $imageInfo = @getimagesize($filePath);
-                if (is_array($imageInfo) && !empty($imageInfo['mime'])) {
-                    $detectedMimeType = (string) $imageInfo['mime'];
-                }
-            }
-
             if ($detectedMimeType === '') {
                 $detectedMimeType = (string)($_FILES['val-file']['type'] ?? '');
             }
 
-            if (!in_array($detectedMimeType, $allowedMimeTypes, true)) {
+            $isAllowedByImageType = in_array($imageType, [IMAGETYPE_JPEG, IMAGETYPE_PNG], true);
+            $isAllowedByMime = in_array(strtolower($detectedMimeType), $allowedMimeTypes, true)
+                || preg_match('/^image\/(jpeg|jpg|pjpeg|png|x-png|x-jpeg|jfif)$/i', $detectedMimeType) === 1;
+
+            if (!$isAllowedByImageType && !$isAllowedByMime) {
                 $createAvatarFrameError = 'Invalid image type. Only PNG and JPG files are allowed.';
             }
         }
