@@ -168,8 +168,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_frame') {
                                                 ? '<span class="badge badge-success">Working</span>'
                                                 : '<span class="badge badge-secondary">Disabled</span>';
 
-                                            $editName = htmlspecialchars($giftName, ENT_QUOTES, 'UTF-8');
-
                                             echo '
                                             <tr>
                                                 <td>' . htmlspecialchars($objectId) . '</td>
@@ -180,13 +178,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_frame') {
                                                 <td>' . $workingBadge . '</td>
                                                 <td><span>' . $file . '</span></td>
                                                 <td>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-sm btn-warning"
-                                                        onclick="openFrameEdit(\'' . $objectId . '\', \'' . $editName . '\', \'' . $credits . '\', \'' . $period . '\', ' . ($isWorking ? 'true' : 'false') . ')"
-                                                    >
+                                                    <a href="../dashboard/edit_avatar_frame.php?objectId=' . urlencode($objectId) . '" class="btn btn-sm btn-warning">
                                                         <i class="fa fa-edit"></i> Edit
-                                                    </button>
+                                                    </a>
                                                     <form method="post" action="" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to remove this avatar frame?\')">
                                                         <input type="hidden" name="action" value="delete_frame">
                                                         <input type="hidden" name="frame_id" value="' . htmlspecialchars($objectId, ENT_QUOTES, 'UTF-8') . '">
@@ -213,64 +207,3 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_frame') {
         </div>
     </div>
 </div>
-
-<div id="frameEditPanel" class="card m-3" style="display:none; border:1px solid #e5e5e5;">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Edit Avatar Frame</strong>
-        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="closeFrameEdit()">Close</button>
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data" action="">
-            <input type="hidden" name="action" value="update_frame">
-            <input type="hidden" id="frame_id" name="frame_id" value="">
-
-            <div class="form-group">
-                <label for="frame_name">Frame Name</label>
-                <input type="text" id="frame_name" name="frame_name" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="frame_credits">Credits</label>
-                <input type="number" min="1" id="frame_credits" name="frame_credits" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="frame_period">Period (days)</label>
-                <input type="number" min="1" id="frame_period" name="frame_period" class="form-control" value="15">
-            </div>
-
-            <div class="form-group">
-                <label for="frame_file">Replace File (PNG)</label>
-                <input type="file" id="frame_file" name="frame_file" class="form-control" accept="image/png,image/jpeg,image/webp">
-            </div>
-
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="frame_is_working" name="frame_is_working">
-                <label class="form-check-label" for="frame_is_working">Frame is working</label>
-            </div>
-
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="remove_frame_file" name="remove_frame_file">
-                <label class="form-check-label" for="remove_frame_file">Remove current file</label>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-    </div>
-</div>
-
-<script>
-function openFrameEdit(id, name, credits, period, isWorking) {
-    document.getElementById('frame_id').value = id;
-    document.getElementById('frame_name').value = name;
-    document.getElementById('frame_credits').value = credits;
-    document.getElementById('frame_period').value = period;
-    document.getElementById('frame_is_working').checked = !!isWorking;
-    document.getElementById('remove_frame_file').checked = false;
-    document.getElementById('frameEditPanel').style.display = 'block';
-}
-
-function closeFrameEdit() {
-    document.getElementById('frameEditPanel').style.display = 'none';
-}
-</script>

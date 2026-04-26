@@ -105,7 +105,7 @@ try {
 $cuObjectID = $currUser->getObjectId();
 
 //Get username
-$username = $currUser->getUsername();
+$username = $currUser->get('username');
 
 // Nome completo
 $name = $currUser->get('name');
@@ -262,7 +262,7 @@ if ($emailVerified == true){
     $email2 = "Verified";
     $emailVeri2 = "true";
 
-}*/
+}
 
 // Show image
 /*$sImage = $currUser->get('photo_verified_file');
