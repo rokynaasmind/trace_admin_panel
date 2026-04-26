@@ -207,56 +207,48 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_gift') {
     </div>
 </div>
 
-<div class="modal fade" id="giftEditModal" tabindex="-1" role="dialog" aria-labelledby="giftEditModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="giftEditModalLabel">Edit Gift</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div id="giftEditPanel" class="card m-3" style="display:none; border:1px solid #e5e5e5;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Edit Gift</strong>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="closeGiftEdit()">Close</button>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="">
+            <input type="hidden" name="action" value="update_gift">
+            <input type="hidden" id="gift_id" name="gift_id" value="">
+
+            <div class="form-group">
+                <label for="gift_name">Gift Name</label>
+                <input type="text" id="gift_name" name="gift_name" class="form-control" required>
             </div>
-            <form method="post" enctype="multipart/form-data" action="">
-                <div class="modal-body">
-                    <input type="hidden" name="action" value="update_gift">
-                    <input type="hidden" id="gift_id" name="gift_id" value="">
 
-                    <div class="form-group">
-                        <label for="gift_name">Gift Name</label>
-                        <input type="text" id="gift_name" name="gift_name" class="form-control" required>
-                    </div>
+            <div class="form-group">
+                <label for="gift_category">Category</label>
+                <select id="gift_category" name="gift_category" class="form-control" required>
+                    <?php foreach ($giftCategories as $category): ?>
+                        <option value="<?php echo htmlspecialchars($category); ?>"><?php echo htmlspecialchars(ucfirst($category)); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-                    <div class="form-group">
-                        <label for="gift_category">Category</label>
-                        <select id="gift_category" name="gift_category" class="form-control" required>
-                            <?php foreach ($giftCategories as $category): ?>
-                                <option value="<?php echo htmlspecialchars($category); ?>"><?php echo htmlspecialchars(ucfirst($category)); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+            <div class="form-group">
+                <label for="gift_credits">Credits</label>
+                <input type="number" min="1" id="gift_credits" name="gift_credits" class="form-control" required>
+            </div>
 
-                    <div class="form-group">
-                        <label for="gift_credits">Credits</label>
-                        <input type="number" min="1" id="gift_credits" name="gift_credits" class="form-control" required>
-                    </div>
+            <div class="form-group">
+                <label for="gift_file">Replace Photo/File</label>
+                <input type="file" id="gift_file" name="gift_file" class="form-control" accept="application/json,image/png,image/jpeg,image/webp,image/gif">
+                <small class="text-muted">Upload JSON or image file.</small>
+            </div>
 
-                    <div class="form-group">
-                        <label for="gift_file">Replace Photo/File</label>
-                        <input type="file" id="gift_file" name="gift_file" class="form-control" accept="application/json,image/png,image/jpeg,image/webp,image/gif">
-                        <small class="text-muted">Upload JSON or image file.</small>
-                    </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remove_file" name="remove_file">
+                <label class="form-check-label" for="remove_file">Remove current photo/file</label>
+            </div>
 
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="remove_file" name="remove_file">
-                        <label class="form-check-label" for="remove_file">Remove current photo/file</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
     </div>
 </div>
 
@@ -267,6 +259,10 @@ function openGiftEdit(id, name, category, credits) {
     document.getElementById('gift_category').value = category;
     document.getElementById('gift_credits').value = credits;
     document.getElementById('remove_file').checked = false;
-    $('#giftEditModal').modal('show');
+    document.getElementById('giftEditPanel').style.display = 'block';
+}
+
+function closeGiftEdit() {
+    document.getElementById('giftEditPanel').style.display = 'none';
 }
 </script>

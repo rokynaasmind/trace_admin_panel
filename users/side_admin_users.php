@@ -84,6 +84,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
 
 ?>
 
+<style>
+    .admin-create-form label {
+        color: #333;
+    }
+</style>
+
 <div class="page-wrapper">
     <!-- Bread crumb -->
     <div class="row page-titles">
@@ -126,27 +132,27 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                             <h5 class="m-0">Create Admin User</h5>
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleCreateAdminPanel(false)">Close</button>
                         </div>
-                        <form method="post" action="">
+                        <form method="post" action="" class="admin-create-form">
                             <input type="hidden" name="action" value="create_admin">
 
                             <div class="form-group">
                                 <label for="admin_name">Name</label>
-                                <input type="text" id="admin_name" name="admin_name" class="form-control" required>
+                                <input type="text" placeholder="full name" id="admin_name" name="admin_name" class="form-control" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="admin_email">Email</label>
-                                <input type="email" id="admin_email" name="admin_email" class="form-control" required>
+                                <input type="email" placeholder="valid email" id="admin_email" name="admin_email" class="form-control" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="admin_username">Username</label>
-                                <input type="text" id="admin_username" name="admin_username" class="form-control" required>
+                                <input type="text" placeholder="username" id="admin_username" name="admin_username" class="form-control" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="admin_password">Password</label>
-                                <input type="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
+                                <input type="password" placeholder="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
                             </div>
 
                             <div class="form-group">

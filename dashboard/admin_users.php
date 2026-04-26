@@ -71,10 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $newAdmin->set('isViewer', false);
                 $newAdmin->signUp(true);
 
-                ParseUser::logOut();
-                ParseUser::become($sessionToken, true);
-                $_SESSION['token'] = $sessionToken;
-
                 $_SESSION['admin_users_flash'] = ['type' => 'success', 'message' => 'Admin user created successfully and is now visible in the list.'];
             }
         } catch (ParseException $e) {

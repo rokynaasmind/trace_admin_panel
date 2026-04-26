@@ -214,56 +214,48 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_frame') {
     </div>
 </div>
 
-<div class="modal fade" id="frameEditModal" tabindex="-1" role="dialog" aria-labelledby="frameEditModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="frameEditModalLabel">Edit Avatar Frame</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div id="frameEditPanel" class="card m-3" style="display:none; border:1px solid #e5e5e5;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Edit Avatar Frame</strong>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="closeFrameEdit()">Close</button>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="">
+            <input type="hidden" name="action" value="update_frame">
+            <input type="hidden" id="frame_id" name="frame_id" value="">
+
+            <div class="form-group">
+                <label for="frame_name">Frame Name</label>
+                <input type="text" id="frame_name" name="frame_name" class="form-control" required>
             </div>
-            <form method="post" enctype="multipart/form-data" action="">
-                <div class="modal-body">
-                    <input type="hidden" name="action" value="update_frame">
-                    <input type="hidden" id="frame_id" name="frame_id" value="">
 
-                    <div class="form-group">
-                        <label for="frame_name">Frame Name</label>
-                        <input type="text" id="frame_name" name="frame_name" class="form-control" required>
-                    </div>
+            <div class="form-group">
+                <label for="frame_credits">Credits</label>
+                <input type="number" min="1" id="frame_credits" name="frame_credits" class="form-control" required>
+            </div>
 
-                    <div class="form-group">
-                        <label for="frame_credits">Credits</label>
-                        <input type="number" min="1" id="frame_credits" name="frame_credits" class="form-control" required>
-                    </div>
+            <div class="form-group">
+                <label for="frame_period">Period (days)</label>
+                <input type="number" min="1" id="frame_period" name="frame_period" class="form-control" value="15">
+            </div>
 
-                    <div class="form-group">
-                        <label for="frame_period">Period (days)</label>
-                        <input type="number" min="1" id="frame_period" name="frame_period" class="form-control" value="15">
-                    </div>
+            <div class="form-group">
+                <label for="frame_file">Replace File (PNG)</label>
+                <input type="file" id="frame_file" name="frame_file" class="form-control" accept="image/png,image/jpeg,image/webp">
+            </div>
 
-                    <div class="form-group">
-                        <label for="frame_file">Replace File (PNG)</label>
-                        <input type="file" id="frame_file" name="frame_file" class="form-control" accept="image/png,image/jpeg,image/webp">
-                    </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="frame_is_working" name="frame_is_working">
+                <label class="form-check-label" for="frame_is_working">Frame is working</label>
+            </div>
 
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="frame_is_working" name="frame_is_working">
-                        <label class="form-check-label" for="frame_is_working">Frame is working</label>
-                    </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remove_frame_file" name="remove_frame_file">
+                <label class="form-check-label" for="remove_frame_file">Remove current file</label>
+            </div>
 
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="remove_frame_file" name="remove_frame_file">
-                        <label class="form-check-label" for="remove_frame_file">Remove current file</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
     </div>
 </div>
 
@@ -275,6 +267,10 @@ function openFrameEdit(id, name, credits, period, isWorking) {
     document.getElementById('frame_period').value = period;
     document.getElementById('frame_is_working').checked = !!isWorking;
     document.getElementById('remove_frame_file').checked = false;
-    $('#frameEditModal').modal('show');
+    document.getElementById('frameEditPanel').style.display = 'block';
+}
+
+function closeFrameEdit() {
+    document.getElementById('frameEditPanel').style.display = 'none';
 }
 </script>
