@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 require '../vendor/autoload.php';
 include '../Configs.php';
 
@@ -53,3 +55,5 @@ if ((($currUser->get('isSuperAdmin') ?? false) === true) !== true) {
     <?php include 'footer.php'; ?>
 </div>
 </body>
+
+<?php ob_end_flush(); ?>
