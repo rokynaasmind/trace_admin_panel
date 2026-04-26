@@ -10,6 +10,9 @@ use Parse\ParseUser;
 
 session_start();
 
+$createAvatarFrameError = '';
+$createAvatarFrameSuccess = '';
+
 $currUser = ParseUser::getCurrentUser();
 if ($currUser){
     // Store current user session token, to restore in case we create new user
@@ -28,31 +31,68 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
         window.alert('You need administrator authorization to perform this action.');
         </script>";
     }else{
-        $name = $_POST['val-name'];
-        $credits = $_POST['val-credits'];
-        $filePath = $_FILES["val-file"]["tmp_name"] ?? '';
-        $fileName = $_FILES['val-file']['name'];
+        $name = trim($_POST['val-name']);
+        $credits = (int)($_POST['val-credits'] ?? 0);
+        $filePath = $_FILES['val-file']['tmp_name'] ?? '';
+        $fileName = $_FILES['val-file']['name'] ?? '';
+        $fileError = $_FILES['val-file']['error'] ?? UPLOAD_ERR_NO_FILE;
+        $detectedMimeType = '';
+
         $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($fileName, PATHINFO_FILENAME));
         $safeExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $safeFileName = $safeBaseName ?: 'avatar_frame';
-        if ($safeExtension !== '') {
-            $safeFileName .= '.' . $safeExtension;
+        $allowedExtensions = ['png', 'jpg', 'jpeg'];
+        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/pjpeg'];
+
+        if ($name === '' || $credits <= 0) {
+            $createAvatarFrameError = 'Please provide a valid name and credits amount.';
+        } elseif ($fileError !== UPLOAD_ERR_OK || !$filePath || !is_uploaded_file($filePath)) {
+            $createAvatarFrameError = 'Please upload a valid PNG or JPG image file.';
+        } elseif (!in_array($safeExtension, $allowedExtensions, true)) {
+            $createAvatarFrameError = 'Invalid file extension. Only PNG and JPG files are allowed.';
+        } else {
+            if (function_exists('finfo_open')) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                if ($finfo !== false) {
+                    $detectedMimeType = (string) finfo_file($finfo, $filePath);
+                    finfo_close($finfo);
+                }
+            }
+
+            if ($detectedMimeType === '') {
+                $detectedMimeType = (string)($_FILES['val-file']['type'] ?? '');
+            }
+
+            if (!in_array($detectedMimeType, $allowedMimeTypes, true)) {
+                $createAvatarFrameError = 'Invalid image type. Only PNG and JPG files are allowed.';
+            }
         }
-        $isWorking = isset($_POST['val-working']) ? true : false;
-        $period =  15;
-    
-        $newGift = ParseObject::create("Gifts");
-    
-        $newGift->set("name", $name);
-        $newGift->set("categories","avatar_frame");
-        $newGift->set("coins", (int)$credits);
-        $newGift->set("period", (int)$period);
-        $newGift->set("isWorking", $isWorking);
-        if ($filePath && $fileName && is_uploaded_file($filePath)) {
-            $newGift->set("file", ParseFile::createFromFile($filePath, $safeFileName));
+
+        if ($createAvatarFrameError === '') {
+            $isWorking = isset($_POST['val-working']) ? true : false;
+            $period = 15;
+
+            $safeFileName = $safeBaseName ?: 'avatar_frame';
+            $normalizedExtension = $safeExtension === 'jpeg' ? 'jpg' : $safeExtension;
+            if ($normalizedExtension !== '') {
+                $safeFileName .= '.' . $normalizedExtension;
+            }
+
+            $newGift = ParseObject::create('Gifts');
+
+            $newGift->set('name', $name);
+            $newGift->set('categories', 'avatar_frame');
+            $newGift->set('coins', $credits);
+            $newGift->set('period', (int)$period);
+            $newGift->set('isWorking', $isWorking);
+            $newGift->set('file', ParseFile::createFromFile($filePath, $safeFileName));
+
+            try {
+                $newGift->save(true);
+                $createAvatarFrameSuccess = 'Avatar Frame created successfully.';
+            } catch (Exception $e) {
+                $createAvatarFrameError = $e->getMessage();
+            }
         }
-    
-        $newGift->save(true);
     }
    } 
 
@@ -81,6 +121,14 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
             <div class="col-12 col-md-10 col-xl-6" style="margin-left:auto; margin-right:auto;padding:10px 30px">
                 <div class="card">
                     <div class="card-body">
+                        <?php if ($createAvatarFrameError !== ''): ?>
+                            <div class="alert alert-danger"><?php echo htmlspecialchars($createAvatarFrameError); ?></div>
+                        <?php endif; ?>
+
+                        <?php if ($createAvatarFrameSuccess !== ''): ?>
+                            <div class="alert alert-success"><?php echo htmlspecialchars($createAvatarFrameSuccess); ?></div>
+                        <?php endif; ?>
+
                         <div class="needs-validation">
                         <form class="form-valide" enctype="multipart/form-data" action="" method="post" novalidate>
                         <div class="form-group row">
@@ -108,10 +156,10 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                         </div>
 
                             <div class="form-group row">
-                                <label for="val-file" class="col-sm-4 col-form-label">PNG file<span class="text-danger">*</span></label>
+                                <label for="val-file" class="col-sm-4 col-form-label">Image file (PNG/JPG)<span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
-                                    <input id="val-file" name="val-file" type="file" accept=".png" required />
-                                    <div class="invalid-feedback">Please choose your Avatar Frame file, in PNG format</div>
+                                    <input id="val-file" name="val-file" type="file" accept="image/png, image/jpeg, .png, .jpg, .jpeg" required />
+                                    <div class="invalid-feedback">Please choose your Avatar Frame image file (PNG/JPG).</div>
                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
