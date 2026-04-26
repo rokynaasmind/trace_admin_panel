@@ -82,6 +82,29 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
     }
 }
 
+if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
+    $adminId = trim($_POST['admin_id'] ?? '');
+
+    if ($adminId === '') {
+        $createAdminError = 'Invalid admin selected for deletion.';
+    } else {
+        try {
+            $query = new ParseQuery("_User");
+            $targetAdmin = $query->get($adminId, true);
+            $isSuperAdmin = ($targetAdmin->get('isSuperAdmin') ?? false) === true;
+
+            if ($adminId === $currUser->getObjectId() || $isSuperAdmin) {
+                $createAdminError = 'This admin user cannot be deleted.';
+            } else {
+                $targetAdmin->destroy(true);
+                $createAdminSuccess = 'Admin user deleted successfully.';
+            }
+        } catch (ParseException $e) {
+            $createAdminError = $e->getMessage();
+        }
+    }
+}
+
 ?>
 
 <style>
@@ -182,7 +205,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                                     <th style="color:#65131f ;">Bithday</th>
                                     <!-- <th style="color:#65131f ;">Age</th>  -->
                                     <th style="color:#65131f ;">Mode</th>
-                                    <!-- <th style="color:#65131f ;">Activation</th> -->
+                                    <th style="color:#65131f ;">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -254,6 +277,19 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                                         }
                                         
                                         $mode = $cObj->get('isViewer') == false? 'Challenger' : 'Viewer';
+                                        $isProtected = $cObj->getObjectId() === $cuObjectID || ($cObj->get('isSuperAdmin') ?? false) === true;
+                                        $editLink = '<a href="../dashboard/edit_user.php?objectId=' . urlencode($objectId) . '" class="btn btn-sm btn-warning mr-1"><i class="fa fa-edit"></i> Edit</a>';
+                                        $deleteAction = '';
+                                        if ($isProtected) {
+                                            $deleteAction = '<span class="badge badge-secondary">Protected</span>';
+                                        } else {
+                                            $deleteAction = '<form method="post" action="" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this admin user?\')">'
+                                                . '<input type="hidden" name="action" value="delete_admin">'
+                                                . '<input type="hidden" name="admin_id" value="' . htmlspecialchars($objectId, ENT_QUOTES, 'UTF-8') . '">'
+                                                . '<button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button>'
+                                                . '</form>';
+                                        }
+                                        $actions = $editLink . $deleteAction;
                                         
                                         echo '
 		            	
@@ -265,6 +301,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_admin') {
                                     <td><span>'.$UserGender.'</span></td>
                                     <td><span>'.$birthDate.'</span></td>
                                     <td>'.$mode.'</td>
+                                    <td>'.$actions.'</td>
                                 </tr>
                                 
                                 ';

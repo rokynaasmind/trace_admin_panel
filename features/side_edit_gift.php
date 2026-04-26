@@ -1,22 +1,5 @@
 <?php
 
-require '../vendor/autoload.php';
-include '../Configs.php';
-
-use Parse\ParseException;
-use Parse\ParseFile;
-use Parse\ParseQuery;
-use Parse\ParseUser;
-
-session_start();
-
-$currUser = ParseUser::getCurrentUser();
-if ($currUser) {
-    $_SESSION['token'] = $currUser->getSessionToken();
-} else {
-    header('Refresh:0; url=../index.php');
-}
-
 $giftCategories = ['love', 'moods', 'artists', 'collectibles', 'games', 'family', 'classic', '3d', 'vip', 'country', 'festival', 'trending'];
 $giftId = $_GET['objectId'] ?? '';
 $gift = null;
@@ -25,9 +8,9 @@ $giftSuccess = '';
 
 if ($giftId !== '') {
     try {
-        $query = new ParseQuery('Gifts');
+        $query = new \Parse\ParseQuery('Gifts');
         $gift = $query->get($giftId, true);
-    } catch (ParseException $e) {
+    } catch (\Parse\ParseException $e) {
         $giftError = $e->getMessage();
     }
 }
@@ -55,12 +38,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_gift' && $gift) {
                 $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
                 $safeExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
                 $safeFileName = ($safeBaseName !== '' ? $safeBaseName : 'gift_file') . ($safeExtension !== '' ? '.' . $safeExtension : '');
-                $gift->set('file', ParseFile::createFromFile($_FILES['gift_file']['tmp_name'], $safeFileName));
+                $gift->set('file', \Parse\ParseFile::createFromFile($_FILES['gift_file']['tmp_name'], $safeFileName));
             }
 
             $gift->save(true);
             $giftSuccess = 'Gift updated successfully.';
-        } catch (ParseException $e) {
+        } catch (\Parse\ParseException $e) {
             $giftError = $e->getMessage();
         }
     }
@@ -73,25 +56,7 @@ if ($typeFile !== null && is_object($typeFile) && method_exists($typeFile, 'getU
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" sizes="16x16" href="../assets/dashboard/images/favicon.png">
-    <title><?php echo $app_name; ?> - Edit Gift</title>
-    <link href="../assets/dashboard/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link href="../assets/dashboard/css/helper.css" rel="stylesheet">
-    <link href="../assets/dashboard/css/style.css" rel="stylesheet">
-    <link href="../assets/dashboard/css/aliki.css" rel="stylesheet">
-</head>
-<body class="fix-header fix-sidebar">
-<div id="main-wrapper">
-    <?php include '../admin/header_admin.php'; ?>
-    <?php include '../admin/left_sidebar_admin.php'; ?>
-
-    <div class="page-wrapper">
+<div class="page-wrapper">
         <div class="row page-titles">
             <div class="col">
                 <ol class="breadcrumb">
@@ -169,6 +134,3 @@ if ($typeFile !== null && is_object($typeFile) && method_exists($typeFile, 'getU
         </div>
     </div>
 </div>
-<?php include '../dashboard/footer.php'; ?>
-</body>
-</html>
