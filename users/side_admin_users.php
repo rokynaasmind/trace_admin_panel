@@ -119,7 +119,7 @@ function normalize_user_role($role): string
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%"> 
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">ID</th>
                                     <th style="color:#65131f ;">Name</th>
                                     <th style="color:#65131f ;">Username</th>
                                     <th style="color:#65131f ;">Email</th>
@@ -228,7 +228,7 @@ function normalize_user_role($role): string
                                         echo '
 		            	
 		            	        <tr>
-                                            <td>'.$safeObjectId.'</td>
+                                            <td>'.$uid.'</td>
                                             <td>'.$safeName.'</td>
                                             <td>'.$safeUsername.'</td>
                                             <td>'.$safeEmail.'</td>
