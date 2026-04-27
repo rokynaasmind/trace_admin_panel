@@ -19,6 +19,37 @@ if ($currUser) {
 $categoryMessage = '';
 $categoryError = '';
 
+if (isset($_POST['action']) && $_POST['action'] === 'delete_gift_category') {
+    $deleteCategoryId = trim((string)($_POST['category_id'] ?? ''));
+    if ($deleteCategoryId === '') {
+        $categoryError = 'Invalid category selected for deletion.';
+    } else {
+        try {
+            $categoryQuery = new ParseQuery('GiftCategory');
+            $category = $categoryQuery->get($deleteCategoryId, true);
+            $categoryCode = trim((string)($category->get('code') ?? ''));
+
+            if ($categoryCode !== '') {
+                $giftQuery = new ParseQuery('Gifts');
+                $giftQuery->equalTo('categories', $categoryCode);
+                $giftCount = $giftQuery->count();
+
+                if ($giftCount > 0) {
+                    $categoryError = 'Cannot delete this category because ' . $giftCount . ' gift(s) are using it.';
+                } else {
+                    $category->destroy(true);
+                    $categoryMessage = 'Gift category deleted successfully.';
+                }
+            } else {
+                $category->destroy(true);
+                $categoryMessage = 'Gift category deleted successfully.';
+            }
+        } catch (Exception $e) {
+            $categoryError = $e->getMessage();
+        }
+    }
+}
+
 if (isset($_GET['updated']) && $_GET['updated'] === '1') {
     $categoryMessage = 'Gift category updated successfully.';
 }
@@ -107,6 +138,13 @@ if (isset($_GET['created']) && $_GET['created'] === '1') {
                                                     <a href="../dashboard/edit_gift_category.php?objectId=' . urlencode($objectId) . '" class="btn btn-sm btn-warning">
                                                         <i class="fa fa-edit"></i> Edit
                                                     </a>
+                                                    <form method="post" action="" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this gift category?\')">
+                                                        <input type="hidden" name="action" value="delete_gift_category">
+                                                        <input type="hidden" name="category_id" value="' . htmlspecialchars($objectId, ENT_QUOTES, 'UTF-8') . '">
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="fa fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             ';

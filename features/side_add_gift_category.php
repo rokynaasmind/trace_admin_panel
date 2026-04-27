@@ -49,7 +49,7 @@ if (isset($_POST['val-name'])) {
                     $newCategory->set('code', $code);
                     $newCategory->save(true);
 
-                    header('Location: ../dashboard/gift_category.php?created=1');
+                    echo '<script>window.location.href="../dashboard/gift_category.php?created=1";</script>';
                     exit;
                 }
             } catch (Exception $e) {
