@@ -150,6 +150,7 @@ function normalize_user_role($role): string
                                         }
 
                                         $objectId = $cObj->getObjectId();
+                                        $uid = htmlspecialchars((string)($cObj->get('uid') ?? $objectId), ENT_QUOTES, 'UTF-8');
 
                                         $name = $cObj->get('name');
                                         $username = $cObj->get('username');
