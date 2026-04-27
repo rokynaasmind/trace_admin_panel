@@ -15,6 +15,23 @@ if (!empty($adminUsersFlash) && is_array($adminUsersFlash)) {
 $currUser = ParseUser::getCurrentUser();
 $cuObjectID = $currUser ? $currUser->getObjectId() : '';
 
+$potentialAdminCandidates = [];
+try {
+    $userQuery = new ParseQuery("_User");
+    $userQuery->limit(1000);
+    $allUsers = $userQuery->find(true);
+    foreach ($allUsers as $candidate) {
+        $candidateRole = strtolower(trim((string) ($candidate->get('role') ?? '')));
+        $isCandidateSuperAdmin = ($candidate->get('isSuperAdmin') ?? false) === true;
+        if ($candidateRole === 'admin' || $isCandidateSuperAdmin) {
+            continue;
+        }
+        $potentialAdminCandidates[] = $candidate;
+    }
+} catch (ParseException $e) {
+    // fallback to empty candidate list
+}
+
 function normalize_user_role($role): string
 {
     return strtolower(trim((string) ($role ?? '')));
@@ -73,44 +90,26 @@ function normalize_user_role($role): string
                         <form method="post" action="" class="admin-create-form">
                             <input type="hidden" name="action" value="create_admin">
 
-                            <div class="form-group">
-                                <label for="admin_name">Name</label>
-                                <input type="text" placeholder="full name" id="admin_name" name="admin_name" class="form-control" required>
-                            </div>
+                            <?php if (empty($potentialAdminCandidates)): ?>
+                                <div class="alert alert-warning">No eligible users found to promote to admin.</div>
+                            <?php else: ?>
+                                <div class="form-group">
+                                    <label for="existing_user_id">Select user to promote</label>
+                                    <select id="existing_user_id" name="existing_user_id" class="form-control" required>
+                                        <option value="">Choose a user</option>
+                                        <?php foreach ($potentialAdminCandidates as $candidate):
+                                            $candidateId = htmlspecialchars($candidate->getObjectId(), ENT_QUOTES, 'UTF-8');
+                                            $candidateName = htmlspecialchars((string)$candidate->get('name') ?: $candidate->get('username') ?: $candidate->get('email'), ENT_QUOTES, 'UTF-8');
+                                            $candidateEmail = htmlspecialchars((string)($candidate->get('email') ?? ''), ENT_QUOTES, 'UTF-8');
+                                            $candidateUsername = htmlspecialchars((string)($candidate->get('username') ?? ''), ENT_QUOTES, 'UTF-8');
+                                        ?>
+                                            <option value="<?php echo $candidateId; ?>"><?php echo $candidateName; ?><?php echo $candidateUsername ? ' (' . $candidateUsername . ')' : ''; ?><?php echo $candidateEmail ? ' - ' . $candidateEmail : ''; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="admin_email">Email</label>
-                                <input type="email" placeholder="valid email" id="admin_email" name="admin_email" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="admin_username">Username</label>
-                                <input type="text" placeholder="username" id="admin_username" name="admin_username" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="admin_password">Password</label>
-                                <input type="password" placeholder="password" id="admin_password" name="admin_password" minlength="6" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="admin_gender">Gender</label>
-                                <select id="admin_gender" name="admin_gender" class="form-control">
-                                    <option value="OTH">Other</option>
-                                    <option value="MAL">Male</option>
-                                    <option value="FML">Female</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="admin_mode">Mode</label>
-                                <select id="admin_mode" name="admin_mode" class="form-control">
-                                    <option value="0">Challenger</option>
-                                    <option value="1">Viewer</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">Create Admin</button>
+                                <button type="submit" class="btn btn-primary">Promote to Admin</button>
+                            <?php endif; ?>
                         </form>
                     </div>
 

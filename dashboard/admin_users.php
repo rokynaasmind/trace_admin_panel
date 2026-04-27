@@ -49,54 +49,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = trim($_POST['action'] ?? '');
 
     if ($action === 'create_admin') {
-        $adminName = trim($_POST['admin_name'] ?? '');
-        $adminEmail = trim($_POST['admin_email'] ?? '');
-        $adminUsername = trim($_POST['admin_username'] ?? '');
-        $adminPassword = trim($_POST['admin_password'] ?? '');
-        $adminGender = trim($_POST['admin_gender'] ?? 'OTH');
-        $adminMode = trim($_POST['admin_mode'] ?? '0');
+        $existingUserId = trim($_POST['existing_user_id'] ?? '');
 
-        if ($adminName === '' || $adminEmail === '' || $adminUsername === '' || $adminPassword === '') {
-            setAdminUsersFlash('danger', 'All fields are required to create an admin user.');
-        } elseif (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
-            setAdminUsersFlash('danger', 'Please provide a valid email address.');
-        } elseif (strlen($adminPassword) < 6) {
-            setAdminUsersFlash('danger', 'Password must be at least 6 characters.');
+        if ($existingUserId === '') {
+            setAdminUsersFlash('danger', 'Please select a user to promote to admin.');
         } else {
             try {
-                $checkUsername = new ParseQuery("_User");
-                $checkUsername->equalTo('username', $adminUsername);
-                $checkUsername->limit(1);
-                $usernameExists = count($checkUsername->find(true)) > 0;
+                $query = new ParseQuery("_User");
+                $targetUser = $query->get($existingUserId, true);
 
-                $checkEmail = new ParseQuery("_User");
-                $checkEmail->equalTo('email', $adminEmail);
-                $checkEmail->limit(1);
-                $emailExists = count($checkEmail->find(true)) > 0;
-
-                if ($usernameExists) {
-                    setAdminUsersFlash('danger', 'Username already exists. Please choose another one.');
-                } elseif ($emailExists) {
-                    setAdminUsersFlash('danger', 'Email already exists. Please use another email.');
+                if (($targetUser->get('role') ?? '') === 'admin') {
+                    setAdminUsersFlash('danger', 'Selected user is already an admin.');
+                } elseif (($targetUser->get('isSuperAdmin') ?? false) === true) {
+                    setAdminUsersFlash('danger', 'Super admin accounts cannot be promoted.');
                 } else {
-                    $sessionToken = $currUser->getSessionToken();
+                    $targetUser->set('role', 'admin');
+                    $targetUser->set('isSuperAdmin', false);
+                    $targetUser->save(true);
 
-                    $newAdmin = new ParseUser();
-                    $newAdmin->set('name', $adminName);
-                    $newAdmin->setUsername($adminUsername);
-                    $newAdmin->setEmail($adminEmail);
-                    $newAdmin->setPassword($adminPassword);
-                    $newAdmin->set('gender', in_array($adminGender, ['MAL', 'FML', 'OTH'], true) ? $adminGender : 'OTH');
-                    $newAdmin->set('role', 'admin');
-                    $newAdmin->set('isViewer', $adminMode === '1');
-                    $newAdmin->set('isSuperAdmin', false);
-                    $newAdmin->signUp(true);
-
-                    // Parse SDK switches current user on signUp; restore the active super admin.
-                    ParseUser::logOut();
-                    ParseUser::become($sessionToken, true);
-
-                    setAdminUsersFlash('success', 'Admin user created successfully.');
+                    setAdminUsersFlash('success', 'User promoted to admin successfully.');
                 }
             } catch (ParseException $e) {
                 setAdminUsersFlash('danger', $e->getMessage());

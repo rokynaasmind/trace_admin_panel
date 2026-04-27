@@ -74,7 +74,7 @@ function array_get_by_index($index, $array) {
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="bg-light">
                                 <tr>
-                                    <th style="color:#65131f ;">ObjectId</th>
+                                    <th style="color:#65131f ;">ID</th>
                                     <th style="color:#65131f ;">Name</th>
                                     <th style="color:#65131f ;">Username</th>
                                     <th style="color:#65131f ;">Avatar</th>
@@ -191,7 +191,7 @@ function array_get_by_index($index, $array) {
 		            	
 		            	          
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
+                                    <td>'.$uid.'</td>
                                     <td>'.$name.'</td>
                                     <td>'.$username.'</td>
                                     <td>'.$avatar.'</td>
