@@ -110,6 +110,8 @@ $sidebarIsSuperAdmin = $sidebarCurrUser ? (($sidebarCurrUser->get('isSuperAdmin'
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="../dashboard/gift.php">All gifts</a></li>
                         <li><a href="../dashboard/add_gift.php">Add new gift</a></li>
+                        <li><a href="../dashboard/gift_category.php">Gift categories</a></li>
+                        <li><a href="../dashboard/add_gift_category.php">Add gift category</a></li>
                     </ul>
                 </li>
                 

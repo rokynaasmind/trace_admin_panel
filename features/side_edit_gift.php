@@ -1,6 +1,41 @@
 <?php
 
-$giftCategories = ['love', 'moods', 'artists', 'collectibles', 'games', 'family', 'classic', '3d', 'vip', 'country', 'festival', 'trending'];
+$giftCategories = [];
+try {
+    $categoryQuery = new \Parse\ParseQuery('GiftCategory');
+    $categoryQuery->ascending('name');
+    $categoryResults = $categoryQuery->find(true);
+    foreach ($categoryResults as $categoryObj) {
+        $categoryName = trim((string)($categoryObj->get('name') ?? ''));
+        $categoryCode = trim((string)($categoryObj->get('code') ?? ''));
+        if ($categoryCode === '' && $categoryName !== '') {
+            $categoryCode = strtolower(preg_replace('/[^a-z0-9_]+/', '_', $categoryName));
+            $categoryCode = trim($categoryCode, '_');
+        }
+        if ($categoryName !== '' && $categoryCode !== '') {
+            $giftCategories[$categoryCode] = $categoryName;
+        }
+    }
+} catch (\Parse\ParseException $e) {
+    $giftCategories = [];
+}
+
+if (empty($giftCategories)) {
+    $giftCategories = [
+        'love' => 'Love',
+        'moods' => 'Moods',
+        'artists' => 'Artists',
+        'collectibles' => 'Collectibles',
+        'games' => 'Games',
+        'family' => 'Family',
+        'classic' => 'Classic',
+        '3d' => '3D',
+        'vip' => 'VIP',
+        'country' => 'Country',
+        'festival' => 'Festival',
+        'trending' => 'Trending',
+    ];
+}
 $giftId = $_GET['objectId'] ?? '';
 $gift = null;
 $giftError = '';
@@ -12,6 +47,14 @@ if ($giftId !== '') {
         $gift = $query->get($giftId, true);
     } catch (\Parse\ParseException $e) {
         $giftError = $e->getMessage();
+    }
+}
+
+if ($gift && $gift->get('categories')) {
+    $currentCategory = trim((string)$gift->get('categories'));
+    if ($currentCategory !== '' && !array_key_exists($currentCategory, $giftCategories)) {
+        $giftCategories[$currentCategory] = ucfirst($currentCategory);
+        asort($giftCategories);
     }
 }
 
@@ -95,8 +138,8 @@ if ($typeFile !== null && is_object($typeFile) && method_exists($typeFile, 'getU
                                     <div class="form-group">
                                         <label for="gift_category">Category</label>
                                         <select id="gift_category" name="gift_category" class="form-control" required>
-                                            <?php foreach ($giftCategories as $category): ?>
-                                                <option value="<?php echo htmlspecialchars($category); ?>" <?php echo (($gift->get('categories') ?? '') === $category) ? 'selected' : ''; ?>><?php echo htmlspecialchars(ucfirst($category)); ?></option>
+                                            <?php foreach ($giftCategories as $categoryCode => $categoryLabel): ?>
+                                                <option value="<?php echo htmlspecialchars($categoryCode); ?>" <?php echo (($gift->get('categories') ?? '') === $categoryCode) ? 'selected' : ''; ?>><?php echo htmlspecialchars($categoryLabel); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>

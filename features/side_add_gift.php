@@ -5,12 +5,48 @@ include '../Configs.php';
 
 use Parse\ParseFile;
 use Parse\ParseObject;
+use Parse\ParseQuery;
 use Parse\ParseUser;
 
 
 session_start();
 
-$categories = ['love','moods','artists','collectibles','games','family','classic','3d','vip','country','festival','trending'];
+$categories = [];
+try {
+    $categoryQuery = new ParseQuery('GiftCategory');
+    $categoryQuery->ascending('name');
+    $categoryResults = $categoryQuery->find(true);
+    foreach ($categoryResults as $categoryObj) {
+        $categoryName = trim((string)($categoryObj->get('name') ?? ''));
+        $categoryCode = trim((string)($categoryObj->get('code') ?? ''));
+        if ($categoryCode === '' && $categoryName !== '') {
+            $categoryCode = strtolower(preg_replace('/[^a-z0-9_]+/', '_', $categoryName));
+            $categoryCode = trim($categoryCode, '_');
+        }
+        if ($categoryName !== '' && $categoryCode !== '') {
+            $categories[$categoryCode] = $categoryName;
+        }
+    }
+} catch (Exception $e) {
+    $categories = [];
+}
+
+if (empty($categories)) {
+    $categories = [
+        'love' => 'Love',
+        'moods' => 'Moods',
+        'artists' => 'Artists',
+        'collectibles' => 'Collectibles',
+        'games' => 'Games',
+        'family' => 'Family',
+        'classic' => 'Classic',
+        '3d' => '3D',
+        'vip' => 'VIP',
+        'country' => 'Country',
+        'festival' => 'Festival',
+        'trending' => 'Trending',
+    ];
+}
 
 $currUser = ParseUser::getCurrentUser();
 if ($currUser){
@@ -95,9 +131,9 @@ if(isset($_POST['val-name']) && isset($_POST['val-credits']) && isset($_FILES['v
                         <div class="form-group row">
                             <label for="val-category" class="col-sm-4 col-form-label">Category<span class="text-danger">*</span></label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="val-category" name="val-category">
-                                    <?php foreach($categories as $c){
-                                        echo '<option value="'.$c.'">'.$c.'</option>';
+                                <select class="form-control" id="val-category" name="val-category" required>
+                                    <?php foreach($categories as $code => $label){
+                                        echo '<option value="'.htmlspecialchars($code, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($label, ENT_QUOTES, 'UTF-8').'</option>';
                                     }?>
                                 </select>
                                 <div class="valid-feedback">Looks good!</div>
