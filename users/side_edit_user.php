@@ -279,9 +279,9 @@ if ($sImage != null) {
 
 $_SESSION['name']   = $fullName;
 $_SESSION['username']     = $username;
-$_SESSION['gender'] = $gender;
-$_SESSION['birthday']     = $birthday;
-$_SESSION['mode']     = $isViwer;
+$_SESSION['gender'] = $genre;
+$_SESSION['birthday']     = $anivDate;
+$_SESSION['mode']     = $viwer;
 $_SESSION['suspension_status'] = $accountStatusDisabled;
 // $_SESSION['emailVerified']     = $status;
 // $_SESSION['activationStatus']     = $account;
@@ -302,11 +302,6 @@ $_SESSION['suspension_status'] = $accountStatusDisabled;
     </div>
 
     <?php
-
-    for ($i = 0;  $i < count($streamsArray); $i++) {
-
-        
-    }
 
     echo '
     

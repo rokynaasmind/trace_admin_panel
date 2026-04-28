@@ -46,7 +46,13 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_trader' && $trader) 
         $trader->set("isActive", $isActive);
         $trader->save(true);
 
-        $successMsg = "Coin Trader updated successfully!";
+        // Sync user's credit with trader's coin balance
+        if ($traderUser) {
+            $traderUser->set("credit", $coinBalance);
+            $traderUser->save(true);
+        }
+
+        $successMsg = "Coin Trader updated successfully! User credit synchronized.";
         // Refresh data
         $query = new ParseQuery("CoinTraders");
         $query->includeKey("user");
@@ -63,10 +69,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'add_coins' && $trader) {
     if ($addAmount > 0) {
         try {
             $currentBalance = $trader->get("coinBalance") ?? 0;
-            $trader->set("coinBalance", $currentBalance + $addAmount);
+            $newBalance = $currentBalance + $addAmount;
+            $trader->set("coinBalance", $newBalance);
             $trader->save(true);
 
-            $successMsg = number_format($addAmount) . " coins added! New balance: " . number_format($currentBalance + $addAmount);
+            // Sync user's credit with new coin balance
+            if ($traderUser) {
+                $traderUser->set("credit", $newBalance);
+                $traderUser->save(true);
+            }
+
+            $successMsg = number_format($addAmount) . " coins added! New balance: " . number_format($newBalance) . " (User credit synchronized)";
             // Refresh
             $query = new ParseQuery("CoinTraders");
             $query->includeKey("user");

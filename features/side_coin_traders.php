@@ -39,6 +39,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_trader') {
             $trader->set("isActive", true);
             $trader->save(true);
 
+            // Sync user's credit with initial coin balance
+            $user->set("credit", $initialCoin);
+            $user->save(true);
+
             echo '<script>window.location.href = "../dashboard/coin_traders.php?success=1";</script>';
             exit;
         } catch (ParseException $e) {
